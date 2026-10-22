@@ -1034,45 +1034,100 @@
     .mall-store-list {
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 12px;
     }
 
-    .mall-store-item {
+    /* 층별 그룹핑 UI */
+    .floor-group {
       display: flex;
-      align-items: flex-start;
-      gap: 9px;
+      flex-direction: column;
+      gap: 7px;
     }
 
-    .store-floor-pill {
-      font-size: 11px;
-      font-weight: 800;
-      color: var(--text-secondary);
-      background-color: var(--surface-subtle);
-      border: 1px solid var(--divider-color);
-      padding: 2px 6px;
-      border-radius: 5px;
-      white-space: nowrap;
-      flex-shrink: 0;
-      text-align: center;
-      margin-top: 1px;
+    .floor-group + .floor-group {
+      padding-top: 10px;
+      border-top: 1px dashed var(--divider-color);
     }
 
-    .store-content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .store-name-row {
+    .floor-header-row {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 2px;
     }
 
-    .store-name {
-      font-size: 14px;
+    .floor-tag-badge {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #FFFFFF;
+      background-color: var(--text-primary);
+      padding: 2px 7px;
+      border-radius: 6px;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .floor-theme-text {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--brand-blue);
+    }
+
+    .mall-bridge-tip {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--brand-blue);
+      background-color: var(--brand-blue-soft);
+      padding: 6px 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .store-clean-card {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--divider-color);
+      border-radius: 10px;
+      padding: 9px 12px;
+    }
+
+    .store-clean-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .store-name-cluster {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .store-clean-title {
+      font-size: 14.5px;
       font-weight: 700;
       color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .store-bldg-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background-color: var(--surface);
+      border: 1px solid var(--divider-color);
+      padding: 1px 5px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .store-clean-desc {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.38;
     }
 
     .store-priority-tag {
@@ -1080,6 +1135,8 @@
       font-weight: 700;
       padding: 1px 5px;
       border-radius: 4px;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
 
     .store-priority-tag.must {
@@ -1095,13 +1152,6 @@
     .store-priority-tag.fun {
       background-color: #F2F4F6;
       color: var(--text-tertiary);
-    }
-
-    .store-target-desc {
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      line-height: 1.35;
     }
 
     .native-toast-strip {
@@ -1317,7 +1367,7 @@
         </div>
       </div>
 
-      <!-- 3. 쇼핑 리스트 패널 (쇼핑몰별 정리) -->
+      <!-- 3. 쇼핑 리스트 패널 (층별 완벽 정리) -->
       <div class="info-content-panel active" id="paneShopping">
 
         <!-- 1) 캐널시티 & 알펜 후쿠오카 -->
@@ -1333,55 +1383,101 @@
               </svg>
             </a>
           </div>
+
+          <div class="mall-bridge-tip">
+            💡 <b>구름다리 연결 안내</b>: 2층과 3층 연결 브릿지로 사우스 ↔ 센터 ↔ OPA 전 구역이 실내로 이어져 있어 바로 건너갈 수 있습니다.
+          </div>
+
           <div class="mall-store-list">
-            <div class="mall-store-item">
-              <span class="store-floor-pill">사우스 2F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">알펜 스포츠데포</span>
+            <!-- [2층] 러닝화 집중 동선 -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">2F</span>
+                <span class="floor-theme-text">러닝화 집중 비교 (사우스 ↔ 센터 도보 1분)</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">알펜 스포츠데포</span>
+                    <span class="store-bldg-badge">사우스 2F</span>
+                  </div>
                   <span class="store-priority-tag must">필수</span>
                 </div>
-                <div class="store-target-desc">On · HOKA · ASICS 러닝화 실물 비교 (오니츠카 제외)</div>
+                <div class="store-clean-desc">On · HOKA · ASICS 러닝화 실물 비교 (오니츠카 제외)</div>
               </div>
-            </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">센터 2F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">아식스 (ASICS)</span>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">아식스 (ASICS)</span>
+                    <span class="store-bldg-badge">센터 2F</span>
+                  </div>
                   <span class="store-priority-tag must">필수</span>
                 </div>
-                <div class="store-target-desc">아식스 단독 매장 모델·컬러·사이즈 추가 비교</div>
+                <div class="store-clean-desc">아식스 단독 매장 모델·컬러·사이즈 추가 비교</div>
               </div>
             </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">OPA 3F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">노스페이스</span>
+
+            <!-- [3층] 기능성 아우터 -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">3F</span>
+                <span class="floor-theme-text">기능성 아우터 & 아웃도어</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">노스페이스</span>
+                    <span class="store-bldg-badge">OPA 3F</span>
+                  </div>
                   <span class="store-priority-tag interest">관심</span>
                 </div>
-                <div class="store-target-desc">골프 및 일상 겸용 경량 아우터 위주 탐색</div>
+                <div class="store-clean-desc">골프 및 일상 겸용 경량 아우터 위주 탐색</div>
               </div>
-            </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">사우스 1·3F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">알펜 골프5 & 아웃도어</span>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">알펜 아웃도어</span>
+                    <span class="store-bldg-badge">사우스 3F</span>
+                  </div>
                   <span class="store-priority-tag interest">관심</span>
                 </div>
-                <div class="store-target-desc">골프용 및 일상용 기능성 아우터 비교</div>
+                <div class="store-clean-desc">아웃도어·러닝용 기능성 아우터 비교</div>
               </div>
             </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">사우스 B1</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">가샤폰 백화점</span>
+
+            <!-- [1층] 골프웨어 -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">1F</span>
+                <span class="floor-theme-text">골프웨어 & 스포츠</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">알펜 골프5</span>
+                    <span class="store-bldg-badge">사우스 1F</span>
+                  </div>
+                  <span class="store-priority-tag interest">관심</span>
+                </div>
+                <div class="store-clean-desc">골프웨어 및 일상용 아우터 비교</div>
+              </div>
+            </div>
+
+            <!-- [B1] 캐릭터 기념품 -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">B1</span>
+                <span class="floor-theme-text">캡슐토이 & 기념품</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">가샤폰 백화점</span>
+                    <span class="store-bldg-badge">사우스 B1</span>
+                  </div>
                   <span class="store-priority-tag fun">재미</span>
                 </div>
-                <div class="store-target-desc">초대형 캡슐토이 가챠 & 캐릭터 기념품</div>
+                <div class="store-clean-desc">초대형 캡슐토이 가챠 & 캐릭터 기념품</div>
               </div>
             </div>
           </div>
@@ -1400,45 +1496,66 @@
               </svg>
             </a>
           </div>
+
           <div class="mall-store-list">
-            <div class="mall-store-item">
-              <span class="store-floor-pill">원빌딩 2F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">살로몬 스토어 (Salomon)</span>
+            <!-- [2층] 테크웨어 & 라이프스타일 -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">2F</span>
+                <span class="floor-theme-text">프리미엄 테크웨어 & 디자인 편집숍</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">살로몬 스토어 (Salomon)</span>
+                  </div>
                   <span class="store-priority-tag must">필수</span>
                 </div>
-                <div class="store-target-desc">트레일러닝화 & 고기능성 테크웨어 탐색</div>
+                <div class="store-clean-desc">트레일러닝화 & 고기능성 테크웨어 탐색</div>
               </div>
-            </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">원빌딩 2F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">앤드원더 (and wander)</span>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">앤드원더 (and wander)</span>
+                  </div>
                   <span class="store-priority-tag interest">관심</span>
                 </div>
-                <div class="store-target-desc">감각적인 디자인의 경량 재킷 & 아웃도어 가방</div>
+                <div class="store-clean-desc">감각적인 디자인의 경량 재킷 & 아웃도어 가방</div>
               </div>
-            </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">원빌딩 2F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">뉴트럴웍스 (NEUTRALWORKS)</span>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">뉴트럴웍스 (NEUTRALWORKS)</span>
+                  </div>
                   <span class="store-priority-tag interest">관심</span>
                 </div>
-                <div class="store-target-desc">운동과 일상을 넘나드는 미니멀 기능성 웨어</div>
+                <div class="store-clean-desc">운동과 일상을 넘나드는 미니멀 기능성 웨어</div>
               </div>
-            </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">원빌딩 2F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">MoMA 디자인 스토어 & 노즈숍</span>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">MoMA 디자인 스토어 & 노즈숍</span>
+                  </div>
                   <span class="store-priority-tag fun">소품</span>
                 </div>
-                <div class="store-target-desc">현대미술관 아트 굿즈 & 니치 향수 시향</div>
+                <div class="store-clean-desc">현대미술관 아트 굿즈 & 니치 향수 시향</div>
+              </div>
+            </div>
+
+            <!-- [B2] 지하 식당가 -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">B2</span>
+                <span class="floor-theme-text">지하 식당가 (일요일 점심 선택지)</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">만다우동 · 신미우라 · 우미노쇼쿠도</span>
+                  </div>
+                  <span class="store-priority-tag must">점심</span>
+                </div>
+                <div class="store-clean-desc">자가제면 우동 / 오야코동 / 생선정식 당일 대기 보고 선택</div>
               </div>
             </div>
           </div>
@@ -1457,41 +1574,75 @@
               </svg>
             </a>
           </div>
+
           <div class="mall-store-list">
-            <div class="mall-store-item">
-              <span class="store-floor-pill">1~3F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">유니클로 & GU 대형점</span>
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">1~2F</span>
+                <span class="floor-theme-text">큐슈 최대 플래그십</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">유니클로 (UNIQLO)</span>
+                  </div>
                   <span class="store-priority-tag must">필수</span>
                 </div>
-                <div class="store-target-desc">큐슈 최대 플래그십 (1~2F 유니클로, 3F GU)</div>
+                <div class="store-clean-desc">큐슈 최대 규모 초대형 플래그십, 라이프웨어 전 라인업</div>
               </div>
             </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">4F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">텐진 로프트 (LOFT)</span>
+
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">3F</span>
+                <span class="floor-theme-text">가성비 데일리웨어</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">GU (지유)</span>
+                  </div>
+                  <span class="store-priority-tag must">필수</span>
+                </div>
+                <div class="store-clean-desc">가성비 트렌디 캐주얼 및 이너웨어 대형 매장</div>
+              </div>
+            </div>
+
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">4F</span>
+                <span class="floor-theme-text">문구·디자인 잡화</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">텐진 로프트 (LOFT)</span>
+                  </div>
                   <span class="store-priority-tag fun">소품</span>
                 </div>
-                <div class="store-target-desc">문구류, 트래블 소품, 뷰티 잡화</div>
+                <div class="store-clean-desc">디자인 문구류, 트래블 소품, 뷰티 잡화</div>
               </div>
             </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">7F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">북오프 슈퍼바자</span>
+
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">7F</span>
+                <span class="floor-theme-text">대형 빈티지 & 취미</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">북오프 슈퍼바자 (BOOKOFF)</span>
+                  </div>
                   <span class="store-priority-tag fun">빈티지</span>
                 </div>
-                <div class="store-target-desc">대형 중고 의류, 빈티지 명품 및 취미용품</div>
+                <div class="store-clean-desc">대형 중고 의류, 빈티지 명품 및 피규어·취미용품</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 4) 다이묘 & 텐진 단독 매장 -->
+        <!-- 4) 다이묘 & 텐진 스포츠 로드숍 -->
         <div class="mall-card">
           <div class="mall-header">
             <div class="mall-title-box">
@@ -1504,51 +1655,66 @@
               </svg>
             </a>
           </div>
+
           <div class="mall-store-list">
-            <div class="mall-store-item">
-              <span class="store-floor-pill">Luz 1~6F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">슈퍼스포츠 제비오 텐진점</span>
+            <!-- [Luz 빌딩] -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">1~6F</span>
+                <span class="floor-theme-text">와타나베도리 Luz 빌딩</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">슈퍼스포츠 제비오 텐진점</span>
+                  </div>
                   <span class="store-priority-tag must">필수</span>
                 </div>
-                <div class="store-target-desc">와타나베도리 대형 멀티 스포츠·러닝웨어 매장 (토킨 전 방문)</div>
+                <div class="store-clean-desc">1F~6F 대형 멀티 스포츠·러닝웨어 매장 (18시 토킨 전 방문)</div>
               </div>
             </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">다이묘</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">아크테릭스 후쿠오카</span>
+
+            <!-- [다이묘 & 니시도리] -->
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">로드숍</span>
+                <span class="floor-theme-text">다이묘 & 니시도리 스트릿</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">아크테릭스 후쿠오카</span>
+                    <span class="store-bldg-badge">다이묘</span>
+                  </div>
                   <span class="store-priority-tag interest">관심</span>
                 </div>
-                <div class="store-target-desc">기능성 고어텍스 아우터 & 경량 방풍 재킷</div>
+                <div class="store-clean-desc">기능성 고어텍스 아우터 & 경량 방풍 재킷</div>
               </div>
-            </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">다이묘</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">뉴발란스 후쿠오카</span>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">뉴발란스 후쿠오카</span>
+                    <span class="store-bldg-badge">니시도리</span>
+                  </div>
                   <span class="store-priority-tag interest">관심</span>
                 </div>
-                <div class="store-target-desc">니시도리 단독 매장 러닝화 라인업 비교</div>
+                <div class="store-clean-desc">니시도리 단독 매장 러닝화 라인업 비교</div>
               </div>
-            </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">텐진 북쪽</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">스트라이드 랩 (STRIDE LAB)</span>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">스트라이드 랩 (STRIDE LAB)</span>
+                    <span class="store-bldg-badge">텐진 북쪽</span>
+                  </div>
                   <span class="store-priority-tag fun">러닝</span>
                 </div>
-                <div class="store-target-desc">알트라(ALTRA) 등 제로드롭 전문 러닝화 편집샵</div>
+                <div class="store-clean-desc">알트라(ALTRA) 등 제로드롭 전문 러닝화 편집샵</div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 5) 리버레인 & 나카스 (도보권) -->
+        <!-- 5) 리버레인 & 나카스 (숙소 도보 1~3분) -->
         <div class="mall-card">
           <div class="mall-header">
             <div class="mall-title-box">
@@ -1561,25 +1727,37 @@
               </svg>
             </a>
           </div>
+
           <div class="mall-store-list">
-            <div class="mall-store-item">
-              <span class="store-floor-pill">리버레인 1F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">LT LOTTO AND TRES</span>
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">1F</span>
+                <span class="floor-theme-text">하카타 리버레인몰 (호텔 맞은편)</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">LT LOTTO AND TRES</span>
+                  </div>
                   <span class="store-priority-tag must">소품</span>
                 </div>
-                <div class="store-target-desc">호텔 바로 맞은편 감각적인 리빙·인테리어 소품 편집샵</div>
+                <div class="store-clean-desc">호텔 바로 맞은편 감각적인 리빙·인테리어 소품 편집샵</div>
               </div>
             </div>
-            <div class="mall-store-item">
-              <span class="store-floor-pill">게이츠 2F</span>
-              <div class="store-content">
-                <div class="store-name-row">
-                  <span class="store-name">돈키호테 나카스점</span>
+
+            <div class="floor-group">
+              <div class="floor-header-row">
+                <span class="floor-tag-badge">2F</span>
+                <span class="floor-theme-text">게이츠(gate's) 나카스 (숙소 도보 3분)</span>
+              </div>
+              <div class="store-clean-card">
+                <div class="store-clean-top">
+                  <div class="store-name-cluster">
+                    <span class="store-clean-title">돈키호테 나카스점</span>
+                  </div>
                   <span class="store-priority-tag fun">기념품</span>
                 </div>
-                <div class="store-target-desc">산토리 위스키·사케, 드럭스토어, 야간 스낵 쇼핑 (24시간)</div>
+                <div class="store-clean-desc">산토리 위스키·사케, 드럭스토어, 야간 스낵 쇼핑 (24시간)</div>
               </div>
             </div>
           </div>
