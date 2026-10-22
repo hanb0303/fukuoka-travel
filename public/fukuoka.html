@@ -1151,7 +1151,7 @@
         <button class="seg-tab-btn active" id="navDay1" onclick="selectTopTab(1)">24일(토)</button>
         <button class="seg-tab-btn" id="navDay2" onclick="selectTopTab(2)">25일(일)</button>
         <button class="seg-tab-btn" id="navDay3" onclick="selectTopTab(3)">26일(월)</button>
-        <button class="seg-tab-btn info-seg" id="navInfo" onclick="selectTopTab('info')">항공·숙소</button>
+        <button class="seg-tab-btn info-seg" id="navInfo" onclick="selectTopTab('info')">쇼핑·예약</button>
       </nav>
     </header>
 
@@ -1184,14 +1184,13 @@
     ========================================================= -->
     <section class="view-container" id="viewInfo">
       <div class="info-chip-group">
-        <button class="chip-btn active" id="subBtnFlight" onclick="switchInfoPane('flight')">항공권</button>
-        <button class="chip-btn" id="subBtnHotel" onclick="switchInfoPane('hotel')">숙소</button>
-        <button class="chip-btn" id="subBtnDining" onclick="switchInfoPane('dining')">식당 예약</button>
-        <button class="chip-btn" id="subBtnShopping" onclick="switchInfoPane('shopping')">쇼핑 리스트</button>
+        <button class="chip-btn active" id="subBtnShopping" onclick="switchInfoPane('shopping')">쇼핑 리스트</button>
+        <button class="chip-btn" id="subBtnFlight" onclick="switchInfoPane('flight')">항공권</button>
+        <button class="chip-btn" id="subBtnReservation" onclick="switchInfoPane('reservation')">예약</button>
       </div>
 
       <!-- 1. 항공권 패널 -->
-      <div class="info-content-panel active" id="paneFlight">
+      <div class="info-content-panel" id="paneFlight">
         <div class="info-native-card">
           <div class="flight-tag-line">
             <span class="flight-type-pill">가는 비행기 · 10.24(토)</span>
@@ -1243,8 +1242,8 @@
         </div>
       </div>
 
-      <!-- 2. 숙소 패널 -->
-      <div class="info-content-panel" id="paneHotel">
+      <!-- 2. 예약 패널 (숙소 & 식당) -->
+      <div class="info-content-panel" id="paneReservation">
         <div class="info-native-card">
           <div class="section-eyebrow-text">2박 3일 베이스캠프</div>
           <div class="section-main-heading">더 로얄 파크 캔버스<br/>후쿠오카 나카스</div>
@@ -1265,22 +1264,12 @@
             </div>
           </div>
 
-          <div class="japanese-pass-card">
-            <span class="jp-badge-tag">택시 · 입국심사서 제시용</span>
-            <div class="jp-kanji-name">ザ ロイヤルパーク キャンバス 福岡中洲</div>
-            <div class="jp-address-str">〒810-0801 福岡県福岡市博多区中洲5-6-20</div>
-            <div class="jp-phone-str">TEL 092-291-1188</div>
-          </div>
-
           <div class="card-dual-actions">
             <button class="btn-native-action btn-action-ghost" onclick="copyText('福岡県福岡市博多区中洲5-6-20')">주소 복사</button>
             <a class="btn-native-action btn-action-fill" href="https://maps.apple.com/?q=The+Royal+Park+Canvas+Fukuoka+Nakasu" target="_blank" rel="noopener">지도 앱 열기</a>
           </div>
         </div>
-      </div>
 
-      <!-- 3. 식당 예약 패널 (스크롤 없는 컴팩트 뷰) -->
-      <div class="info-content-panel" id="paneDining">
         <!-- 1) 토요일 저녁: 하카타 텐푸라 나가오카 -->
         <div class="dining-compact-card">
           <div class="dining-compact-top">
@@ -1328,8 +1317,8 @@
         </div>
       </div>
 
-      <!-- 4. 쇼핑 리스트 패널 (쇼핑몰별 정리) -->
-      <div class="info-content-panel" id="paneShopping">
+      <!-- 3. 쇼핑 리스트 패널 (쇼핑몰별 정리) -->
+      <div class="info-content-panel active" id="paneShopping">
 
         <!-- 1) 캐널시티 & 알펜 후쿠오카 -->
         <div class="mall-card">
@@ -1862,6 +1851,10 @@
       if (viewSchedule) viewSchedule.classList.toggle('active', !isInfo);
       if (viewInfo) viewInfo.classList.toggle('active', isInfo);
 
+      if (isInfo) {
+        switchInfoPane('shopping');
+      }
+
       if (!isInfo) {
         currentDay = target;
         selectedBlockId = null;
@@ -1879,9 +1872,9 @@
     }
 
     function switchInfoPane(paneKey) {
-      const keys = ['flight', 'hotel', 'dining', 'shopping'];
-      const btnIds = { flight: 'subBtnFlight', hotel: 'subBtnHotel', dining: 'subBtnDining', shopping: 'subBtnShopping' };
-      const paneIds = { flight: 'paneFlight', hotel: 'paneHotel', dining: 'paneDining', shopping: 'paneShopping' };
+      const keys = ['shopping', 'flight', 'reservation'];
+      const btnIds = { shopping: 'subBtnShopping', flight: 'subBtnFlight', reservation: 'subBtnReservation' };
+      const paneIds = { shopping: 'paneShopping', flight: 'paneFlight', reservation: 'paneReservation' };
 
       keys.forEach(k => {
         const btn = document.getElementById(btnIds[k]);
