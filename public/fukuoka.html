@@ -2074,6 +2074,7 @@
 
       if (isInfo) {
         switchInfoPane('shopping');
+        syncShoppingAccordionByDay(currentDay);
       }
 
       if (!isInfo) {
@@ -2103,6 +2104,10 @@
         if (btn) btn.classList.toggle('active', k === paneKey);
         if (pane) pane.classList.toggle('active', k === paneKey);
       });
+
+      if (paneKey === 'shopping') {
+        syncShoppingAccordionByDay(currentDay);
+      }
     }
 
     function renderDayList(dayNum) {
@@ -2471,7 +2476,7 @@
     }
 
     /* =========================================================
-       쇼핑몰 아코디언 토글
+       쇼핑몰 아코디언 토글 & 날짜별 동기화
     ========================================================= */
     function toggleMallAccordion(accId) {
       const target = document.getElementById(accId);
@@ -2485,6 +2490,49 @@
       if (!isAlreadyActive) {
         target.classList.add('active');
       }
+    }
+
+    function syncShoppingAccordionByDay(dayNum) {
+      const dayMallMap = {
+        1: 'accCanal',   // 24일(토): 캐널시티 & 알펜 후쿠오카
+        2: 'accOneBldg', // 25일(일): 원 후쿠오카 빌딩 (원빌딩)
+        3: 'accNakasu'   // 26일(월): 리버레인 & 나카스 (돈키호테/숙소 인근)
+      };
+      const targetAccId = dayMallMap[dayNum] || 'accCanal';
+
+      document.querySelectorAll('.mall-acc-item').forEach(item => {
+        item.classList.toggle('active', item.id === targetAccId);
+      });
+    }
+
+    /* 접속 날짜(10.24 -> 1일차, 10.25 -> 2일차, 10.26 -> 3일차) 자동 판별 */
+    function getInitialDay() {
+      // 1. URL 파라미터 우선 지원 (?day=2 또는 ?date=25 로 테스트 가능)
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramDay = urlParams.get('day');
+      const paramDate = urlParams.get('date');
+      if (paramDay && ['1', '2', '3'].includes(paramDay)) {
+        return Number(paramDay);
+      }
+      if (paramDate) {
+        if (paramDate === '24') return 1;
+        if (paramDate === '25') return 2;
+        if (paramDate === '26') return 3;
+      }
+
+      // 2. 실제 날짜 기반 자동 감지 (10월 기준)
+      const now = new Date();
+      const month = now.getMonth(); // 9 = 10월 (0-indexed)
+      const date = now.getDate();
+
+      if (month === 9) {
+        if (date === 24) return 1;
+        if (date === 25) return 2;
+        if (date === 26) return 3;
+      }
+
+      // 3. 여행 전 또는 기본값: 24일(1일차)
+      return 1;
     }
 
     /* =========================================================
@@ -2553,7 +2601,9 @@
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedItinerary();
       initMap();
-      renderDayList(1);
+      const initialDay = getInitialDay();
+      selectTopTab(initialDay);
+      syncShoppingAccordionByDay(initialDay);
       initSwipeGesture();
     });
   </script>
