@@ -1,0 +1,797 @@
+/* Toss Design System (TDS) Pure White Flat Architecture */
+@import url('https://cdn.jsdelivr.net/gh/sun-typeface/SUIT@2/fonts/static/woff2/SUIT.css');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-shadow: none !important; /* 그림자 완전 제거 */
+}
+
+:root {
+  --toss-white: #ffffff;
+  --toss-bg-subtle: #f9fafb;
+  --toss-input-bg: #f2f4f6;
+  --toss-input-hover: #e5e8eb;
+
+  --toss-line: #f2f4f6;
+  --toss-border-subtle: #e5e8eb;
+
+  --toss-text-title: #191f28;
+  --toss-text-body: #333d4b;
+  --toss-text-sub: #6b7684;
+  --toss-text-caption: #8b95a1;
+  --toss-text-disabled: #b0b8c1;
+
+  --toss-blue: #3182f6;
+  --toss-blue-light: #e8f3ff;
+  --toss-blue-hover: #1b64da;
+
+  --toss-green: #04b069;
+  --toss-red: #f04452;
+
+  --radius-input: 12px;
+  --radius-sm: 8px;
+}
+
+body {
+  font-family: 'SUIT', -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif;
+  background-color: var(--toss-white);
+  color: var(--toss-text-body);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ========================================================
+   1. Header & Navigation (Toss Clean Style)
+   ======================================================== */
+.toss-header {
+  background-color: var(--toss-white);
+  border-bottom: 1px solid var(--toss-line);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 28px 36px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header-title {
+  font-size: 26px;
+  font-weight: 800;
+  border: none;
+  background: transparent;
+  color: var(--toss-text-title);
+  font-family: inherit;
+  outline: none;
+  letter-spacing: -0.5px;
+  flex: 1;
+}
+
+.sync-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--toss-text-caption);
+  background-color: var(--toss-bg-subtle);
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.live-indicator {
+  width: 7px;
+  height: 7px;
+  background-color: #2ed573;
+  border-radius: 50%;
+}
+
+.client-count {
+  color: var(--toss-blue);
+  font-weight: 700;
+}
+
+/* Meta info strip (No box, simple line) */
+.header-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--toss-text-caption);
+  flex-wrap: wrap;
+}
+
+.meta-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta-label {
+  font-weight: 500;
+  color: var(--toss-text-caption);
+}
+
+.meta-field input {
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--toss-text-body);
+  font-family: inherit;
+  outline: none;
+  width: 140px;
+}
+
+.meta-field input:focus {
+  color: var(--toss-blue);
+}
+
+.meta-dot {
+  color: var(--toss-border-subtle);
+}
+
+.user-chip {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.user-chip select, .user-chip input {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--toss-text-body);
+  padding: 4px 8px;
+  border: 1px solid var(--toss-border-subtle);
+  border-radius: 6px;
+  background-color: var(--toss-white);
+  outline: none;
+}
+
+/* Toss Tab Bar (Clean underline) */
+.toss-tabs {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+.tabs-inner {
+  display: flex;
+  gap: 32px;
+}
+
+.toss-tab {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--toss-text-sub);
+  padding: 14px 2px 16px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.toss-tab:hover {
+  color: var(--toss-text-title);
+}
+
+.toss-tab.active {
+  color: var(--toss-blue);
+  border-bottom-color: var(--toss-blue);
+  font-weight: 700;
+}
+
+.tab-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  background-color: var(--toss-input-bg);
+  color: var(--toss-text-sub);
+}
+
+.toss-tab.active .tab-badge {
+  background-color: var(--toss-blue-light);
+  color: var(--toss-blue);
+}
+
+/* ========================================================
+   2. Main Content Container
+   ======================================================== */
+.toss-container {
+  max-width: 1140px;
+  margin: 0 auto;
+  padding: 36px 36px 140px;
+}
+
+.toss-view {
+  display: none;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.toss-view.active {
+  display: flex;
+}
+
+/* Toss Signature Soft Input (No Border Box!) */
+.toss-input-wrap {
+  width: 100%;
+}
+
+.toss-main-input {
+  width: 100%;
+  padding: 16px 20px;
+  font-size: 16px;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-input);
+  background-color: var(--toss-input-bg);
+  color: var(--toss-text-title);
+  outline: none;
+  transition: background-color 0.15s ease;
+}
+
+.toss-main-input:focus {
+  background-color: #eaedf0;
+}
+
+.toss-main-input::placeholder {
+  color: var(--toss-text-caption);
+}
+
+.toss-main-textarea {
+  width: 100%;
+  padding: 14px 20px;
+  font-size: 16px;
+  font-family: inherit;
+  border: none;
+  border-radius: var(--radius-input);
+  background-color: var(--toss-input-bg);
+  color: var(--toss-text-title);
+  outline: none;
+  resize: none;
+  overflow-y: hidden;
+  line-height: 1.5;
+  height: 52px;
+  min-height: 52px;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease;
+}
+
+.toss-main-textarea:focus {
+  background-color: #eaedf0;
+}
+
+.toss-main-textarea::placeholder {
+  color: var(--toss-text-caption);
+}
+
+/* Seamless In-place Editable Text */
+.editable-text {
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 1px 3px;
+  margin: -1px -3px;
+  transition: background-color 0.15s ease;
+  white-space: pre-wrap;
+  display: inline-block;
+  outline: none;
+}
+
+.editable-text:hover {
+  background-color: #f2f4f6;
+}
+
+.editable-text[contenteditable="true"] {
+  background-color: #eef1f4;
+  cursor: text;
+}
+
+/* Section Top Action */
+.section-top-action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 8px;
+}
+
+.section-subtitle {
+  font-size: 15px;
+  color: var(--toss-text-sub);
+}
+
+.toss-btn-text {
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--toss-blue);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.toss-btn-text:hover {
+  background-color: var(--toss-blue-light);
+}
+
+/* List Container (Pure Flat, Separated by Hairline Divider) */
+.toss-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ========================================================
+   3. Pure Flat Rows (NO BOX-IN-BOX!)
+   ======================================================== */
+
+/* Q&A Row */
+.toss-qa-row {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--toss-line);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.toss-qa-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toss-qa-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--toss-text-title);
+  flex: 1;
+  line-height: 1.5;
+}
+
+.toss-qa-row.resolved .toss-qa-title {
+  text-decoration: line-through;
+  color: var(--toss-text-disabled);
+}
+
+.toss-qa-ctrls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-resolve-text {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  border: none;
+  background-color: var(--toss-input-bg);
+  color: var(--toss-text-sub);
+  cursor: pointer;
+}
+
+.btn-resolve-text.done {
+  background-color: #e8f8f0;
+  color: var(--toss-green);
+}
+
+.btn-row-del {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--toss-text-disabled);
+  cursor: pointer;
+  padding: 4px;
+}
+
+.btn-row-del:hover {
+  color: var(--toss-red);
+}
+
+/* Replies (No Nested Boxes - Indented Clean Text Stream) */
+.toss-replies-stream {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-left: 4px;
+  padding-left: 14px;
+  border-left: 2px solid var(--toss-line);
+}
+
+.toss-reply-item {
+  font-size: 15px;
+  display: flex;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.toss-reply-author {
+  font-weight: 700;
+  color: var(--toss-text-title);
+  white-space: nowrap;
+}
+
+.toss-reply-text {
+  color: var(--toss-text-body);
+}
+
+/* Soft Inline Reply Textarea */
+.toss-inline-reply {
+  margin-top: 4px;
+  display: flex;
+}
+
+.toss-inline-reply textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--toss-input-bg);
+  color: var(--toss-text-title);
+  outline: none;
+  resize: none;
+  overflow-y: hidden;
+  line-height: 1.5;
+  height: 42px;
+  min-height: 42px;
+  box-sizing: border-box;
+  transition: background-color 0.15s ease;
+}
+
+.toss-inline-reply textarea:focus {
+  background-color: #eaedf0;
+}
+
+/* ========================================================
+   2-Column Dynamic Scrapbook (2/3 Height, Auto Expand, Image Resize)
+   ======================================================== */
+.scrapbook-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.scrap-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scrap-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.scrap-col-title {
+  flex: 1;
+  font-size: 19px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--toss-text-title);
+  font-family: inherit;
+  outline: none;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+  transition: border-color 0.15s ease;
+}
+
+.scrap-col-title:focus {
+  border-bottom-color: var(--toss-blue);
+}
+
+.btn-card-del {
+  background: none;
+  border: none;
+  color: var(--toss-text-disabled);
+  font-size: 17px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+.btn-card-del:hover {
+  color: var(--toss-red);
+  background-color: #fee;
+}
+
+.scrap-col-editor {
+  min-height: 320px; /* 기존의 2/3 수준 */
+  height: auto;      /* 글/이미지가 늘어나면 무제한 자연 확장 */
+  padding: 22px 24px;
+  background-color: var(--toss-bg-subtle);
+  border-radius: var(--radius-input);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--toss-text-title);
+  outline: none;
+  white-space: pre-wrap;
+  transition: background-color 0.15s ease;
+}
+
+.scrap-col-editor:focus {
+  background-color: #f2f4f6;
+}
+
+.scrap-col-editor:empty:before {
+  content: attr(data-placeholder);
+  color: var(--toss-text-disabled);
+  pointer-events: none;
+  display: block;
+}
+
+/* Pasted Images & Controls */
+.scrap-col-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 10px 0;
+  display: block;
+  cursor: pointer;
+  user-select: auto;
+  transition: outline 0.15s ease;
+}
+
+.scrap-col-editor img:hover {
+  outline: 2px solid var(--toss-blue);
+}
+
+.scrap-col-editor img.selected-img {
+  outline: 2px solid var(--toss-blue);
+}
+
+/* Float alignments */
+.scrap-col-editor img.align-left {
+  float: left;
+  margin-right: 18px;
+  margin-bottom: 12px;
+}
+
+.scrap-col-editor img.align-right {
+  float: right;
+  margin-left: 18px;
+  margin-bottom: 12px;
+}
+
+.scrap-col-editor img.align-center {
+  margin-left: auto;
+  margin-right: auto;
+  clear: both;
+}
+
+/* Floating Image Action Toolbar */
+.img-float-toolbar {
+  position: absolute;
+  z-index: 1000;
+  background-color: #191f28;
+  color: #ffffff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  user-select: none;
+}
+
+.img-float-toolbar button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: inherit;
+}
+
+.img-float-toolbar button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.img-float-toolbar .tb-sep {
+  width: 1px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .scrapbook-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Itinerary Days Block (Clean Grouping, No Heavy Boxes) */
+.toss-day-group {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--toss-line);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.toss-day-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toss-day-badge {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--toss-blue);
+  background-color: var(--toss-blue-light);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.toss-day-title-input {
+  flex: 1;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--toss-text-title);
+  font-family: inherit;
+  outline: none;
+}
+
+.toss-day-title-input:focus {
+  color: var(--toss-blue);
+}
+
+.toss-day-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 8px;
+}
+
+.toss-day-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 16px;
+  color: var(--toss-text-body);
+}
+
+.toss-entry-dot {
+  color: var(--toss-text-disabled);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.toss-entry-text {
+  flex: 1;
+  white-space: pre-wrap;
+}
+
+.toss-day-subinput {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--toss-input-bg);
+  color: var(--toss-text-title);
+  outline: none;
+  resize: none;
+  overflow-y: hidden;
+  line-height: 1.5;
+  height: 42px;
+  min-height: 42px;
+  box-sizing: border-box;
+  margin-top: 4px;
+  transition: background-color 0.15s ease;
+}
+
+.toss-day-subinput:focus {
+  background-color: #eaedf0;
+}
+
+/* Checklist Row (No Card Box!) */
+.toss-check-row {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--toss-line);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.toss-check-row.done .toss-check-text {
+  text-decoration: line-through;
+  color: var(--toss-text-disabled);
+}
+
+.toss-check-row input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--toss-blue);
+  cursor: pointer;
+}
+
+.toss-check-text {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--toss-text-title);
+}
+
+.toss-assignee {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--toss-text-caption);
+  background-color: var(--toss-input-bg);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* Empty Placeholder */
+.toss-empty {
+  font-size: 16px;
+  color: var(--toss-text-caption);
+  text-align: center;
+  padding: 48px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-inner {
+    padding: 16px 16px 12px;
+  }
+  .header-title {
+    font-size: 22px;
+  }
+  .toss-tabs {
+    padding: 0 16px;
+  }
+  .tabs-inner {
+    gap: 16px;
+    overflow-x: auto;
+  }
+  .toss-tab {
+    font-size: 15px;
+    padding: 12px 2px 14px;
+  }
+  .toss-container {
+    padding: 24px 16px 100px;
+  }
+  .header-meta-row {
+    font-size: 13px;
+    gap: 6px;
+  }
+}

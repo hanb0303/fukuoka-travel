@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="후쿠오카" />
+  <meta name="theme-color" content="#F7F8FA" />
+  <link rel="apple-touch-icon" href="./icon-180.png" />
+  <link rel="manifest" href="./manifest.json" />
+  <title>후쿠오카 2박 3일 · 롸·통·빛</title>
+
+  <!-- Pretendard Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- SortableJS (드래그 앤 드롭 순서 변경: CDN + 로컬 폴백) -->
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+  <script>
+    if (typeof Sortable === 'undefined') {
+      document.write('<script src="./sortable.min.js"><\/script>');
+    }
+  </script>
+
+
+  <style>
+    /* =========================================================
+       디자인 토큰 시스템 (Apple / Toss Native Standard)
+    ========================================================= */
+    :root {
+      --bg-page: #F7F8FA;
+      --surface: #FFFFFF;
+      --surface-subtle: #F9FAFB;
+      --surface-pressed: #F2F4F6;
+      
+      --text-primary: #191F28;
+      --text-secondary: #4E5968;
+      --text-tertiary: #8B95A1;
+      --text-disabled: #B0B8C1;
+
+      --brand-blue: #3182F6;
+      --brand-blue-soft: rgba(49, 130, 246, 0.08);
+      --brand-blue-hover: #1B64DA;
+      
+      --divider-color: rgba(0, 0, 0, 0.04);
+      --radius-card: 20px;
+      --radius-pill: 999px;
+      --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      box-shadow: none !important;
+    }
+
+    html, body {
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: -0.028em;
+      -webkit-font-smoothing: antialiased;
+      overscroll-behavior-y: none;
+    }
+
+    .app-shell {
+      max-width: 440px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      background-color: var(--bg-page);
+      display: flex;
+      flex-direction: column;
+      padding: 0 16px calc(32px + env(safe-area-inset-bottom));
+    }
+
+    /* =========================================================
+       1. 상단 스티키 헤더 (슬림 고정 내비게이션)
+    ========================================================= */
+    .sticky-header-zone {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: rgba(247, 248, 250, 0.94);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      padding-top: calc(10px + env(safe-area-inset-top));
+      padding-bottom: 8px;
+    }
+
+    .app-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2px 2px 10px;
+    }
+
+    .app-brand {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .brand-title {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.038em;
+    }
+
+    .brand-dates {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+    }
+
+    .brand-companions {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background-color: var(--surface);
+      border: 1px solid var(--divider-color);
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    /* 슬라이딩 세그먼트 컨트롤 */
+    .segmented-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1.15fr;
+      gap: 5px;
+      background-color: #E9ECEF;
+      padding: 4px;
+      border-radius: 14px;
+      margin-bottom: 0px;
+    }
+
+    .seg-tab-btn {
+      appearance: none;
+      border: none;
+      background: transparent;
+      height: 38px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.16s var(--ease-spring), color 0.16s var(--ease-spring), transform 0.1s ease;
+    }
+
+    .seg-tab-btn:active {
+      transform: scale(0.96);
+    }
+
+    .seg-tab-btn.active {
+      background-color: var(--surface);
+      color: var(--text-primary);
+      font-weight: 800;
+    }
+
+    .seg-tab-btn.info-seg.active {
+      color: var(--brand-blue);
+    }
+
+    /* =========================================================
+       2. 구글 지도 위젯 (통일된 20px 곡률과 플로팅 컨트롤)
+    ========================================================= */
+    .map-widget-wrap {
+      position: relative;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      background-color: var(--surface);
+      border: 1px solid var(--divider-color);
+      margin-bottom: 12px;
+    }
+
+    #routeMap {
+      width: 100%;
+      height: 280px;
+      background-color: #E9EEF3;
+    }
+
+    #routeMap.expanded {
+      height: 460px;
+    }
+
+    #routeMap.collapsed {
+      height: 0px;
+    }
+
+    .map-float-ctrls {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 500;
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-map-pill {
+      appearance: none;
+      border: none;
+      background-color: rgba(25, 31, 40, 0.78);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: transform 0.1s ease, background-color 0.15s ease;
+    }
+
+    .btn-map-pill:active {
+      transform: scale(0.94);
+      background-color: rgba(25, 31, 40, 0.92);
+    }
+
+    .map-day-pill {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 500;
+      background-color: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--text-primary);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      pointer-events: none;
+      border: 1px solid var(--divider-color);
+    }
+
+    .map-collapsed-strip {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background-color: var(--surface);
+    }
+
+    .map-collapsed-strip.show {
+      display: flex;
+    }
+
+    .map-collapsed-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .btn-unfold {
+      appearance: none;
+      border: none;
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 6px 13px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+    }
+
+    /* 지도 마커 & 화이트 콜아웃 */
+    .map-marker-container {
+      background: transparent !important;
+      border: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .marker-circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: var(--brand-blue);
+      border: 2.5px solid #FFFFFF;
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+    }
+
+    .marker-circle.active {
+      background-color: var(--text-primary);
+      width: 36px;
+      height: 36px;
+      font-size: 15.5px;
+    }
+
+    .marker-hotel-badge {
+      padding: 4px 9px;
+      border-radius: 8px;
+      background-color: var(--text-primary);
+      border: 2px solid #FFFFFF;
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .leaflet-popup {
+      margin-bottom: 22px !important;
+    }
+
+    .leaflet-popup-content-wrapper {
+      border-radius: 12px !important;
+      border: 1px solid rgba(0, 0, 0, 0.08) !important;
+      background-color: #FFFFFF !important;
+      padding: 0 !important;
+    }
+
+    .leaflet-popup-tip {
+      background-color: #FFFFFF !important;
+    }
+
+    .leaflet-popup-content {
+      margin: 8px 12px !important;
+      font-family: inherit !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      color: var(--text-primary) !important;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .callout-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background-color: var(--brand-blue);
+      color: #FFFFFF;
+      font-size: 10.5px;
+      font-weight: 800;
+    }
+
+    /* =========================================================
+       3. 일정 그룹 카드 (타이포 위계 및 세련된 쉐브론)
+    ========================================================= */
+    .view-container {
+      display: none;
+      flex: 1;
+      margin-top: 10px;
+    }
+
+    .view-container.active {
+      display: block;
+    }
+
+    .itinerary-group-card {
+      background-color: var(--surface);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--divider-color);
+      overflow: hidden;
+    }
+
+    .itinerary-item {
+      position: relative;
+      transition: background-color 0.15s ease;
+    }
+
+    .itinerary-item + .itinerary-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 56px;
+      right: 16px;
+      height: 1px;
+      background-color: var(--divider-color);
+    }
+
+    .itinerary-item.selected {
+      background-color: var(--surface-subtle);
+    }
+
+    .itinerary-item.selected::before,
+    .itinerary-item.selected + .itinerary-item::before {
+      display: none;
+    }
+
+    .item-main-row {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      gap: 13px;
+      cursor: pointer;
+    }
+
+    /* 좌측 원형 순서 배지 */
+    .item-badge-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .item-order-pin {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      font-size: 14px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.16s ease;
+    }
+
+    .itinerary-item.selected .item-order-pin {
+      background-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+
+    /* 중앙 텍스트 정보 */
+    .item-content-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .item-title-text {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 2px;
+    }
+
+    .itinerary-item.selected .item-title-text {
+      font-weight: 800;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-sub-caption {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 확정된 시각일 때만 띄우는 굵은 블루 타임 배지 */
+    .time-badge-fixed {
+      color: var(--brand-blue);
+      font-weight: 700;
+      background-color: var(--brand-blue-soft);
+      padding: 1px 6px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    /* 우측 액션 영역: 길찾기 아이콘 + 드래그 핸들 */
+    .item-actions-wrap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    /* 길찾기 내비게이션 원형 아이콘 버튼 */
+    .item-route-icon-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      text-decoration: none;
+      flex-shrink: 0;
+      transition: transform 0.1s var(--ease-spring), background-color 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .item-route-icon-btn:active {
+      transform: scale(0.9);
+      background-color: rgba(49, 130, 246, 0.22);
+    }
+
+    /* 드래그 핸들 (≡) */
+    .item-drag-handle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 42px;
+      margin: -6px -6px -6px 0;
+      color: var(--text-disabled);
+      cursor: grab;
+      touch-action: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      border-radius: 8px;
+      transition: color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .item-drag-handle svg,
+    .item-drag-handle path {
+      pointer-events: none;
+    }
+
+    .item-drag-handle:hover,
+    .item-drag-handle:active {
+      color: var(--brand-blue);
+      cursor: grabbing;
+    }
+
+    .itinerary-item.sortable-ghost {
+      opacity: 0.25;
+      background-color: var(--brand-blue-soft) !important;
+      border: 1.5px dashed var(--brand-blue) !important;
+    }
+
+    .itinerary-item.sortable-chosen {
+      background-color: var(--surface) !important;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14) !important;
+      border-radius: var(--radius-inner);
+    }
+
+    .itinerary-item.sortable-drag {
+      opacity: 0.98;
+      cursor: grabbing !important;
+      transform: scale(1.02);
+      z-index: 9999 !important;
+    }
+
+    /* 상세 서랍 */
+    .item-drawer-panel {
+      display: none;
+      padding: 0 16px 16px 59px;
+    }
+
+    .itinerary-item.selected .item-drawer-panel {
+      display: block;
+    }
+
+    .drawer-memo-card {
+      background-color: var(--surface);
+      border: 1px solid var(--divider-color);
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      word-break: keep-all;
+      user-select: text;
+      -webkit-user-select: text;
+      margin-bottom: 8px;
+    }
+
+    .drawer-route-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand-blue);
+      text-decoration: none;
+      padding: 4px 0;
+    }
+
+    /* =========================================================
+       4. 항공 · 숙소 · 예약 · 쇼핑 뷰
+    ========================================================= */
+    .info-chip-group {
+      display: flex;
+      gap: 8px;
+      padding: 2px 0 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .info-chip-group::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip-btn {
+      flex-shrink: 0;
+      white-space: nowrap;
+      appearance: none;
+      border: 1px solid var(--divider-color);
+      background-color: var(--surface);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .chip-btn.active {
+      background-color: var(--text-primary);
+      color: #FFFFFF;
+      border-color: var(--text-primary);
+    }
+
+    .info-content-panel {
+      display: none;
+    }
+
+    .info-content-panel.active {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .info-native-card {
+      background-color: var(--surface);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--divider-color);
+      padding: 22px 20px;
+    }
+
+    .flight-tag-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .flight-type-pill {
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      font-size: 12.5px;
+      font-weight: 800;
+      padding: 3px 9px;
+      border-radius: 6px;
+    }
+
+    .flight-type-pill.inbound {
+      background-color: #ECEEF2;
+      color: var(--text-secondary);
+    }
+
+    .flight-id-code {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-tertiary);
+    }
+
+    .flight-route-overview {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .flight-big-time {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    .flight-port-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .flight-arrow-mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 12px;
+    }
+
+    .flight-dur-text {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      margin-bottom: 4px;
+    }
+
+    .flight-line-draw {
+      width: 58px;
+      height: 2px;
+      background-color: #E2E6EA;
+      position: relative;
+    }
+
+    .flight-line-draw::after {
+      content: '';
+      position: absolute;
+      right: -1px;
+      top: -3px;
+      width: 7px;
+      height: 7px;
+      border-top: 2px solid #C4C9D0;
+      border-right: 2px solid #C4C9D0;
+      transform: rotate(45deg);
+    }
+
+    .flight-meta-summary {
+      background-color: var(--surface-subtle);
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .section-eyebrow-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--brand-blue);
+      margin-bottom: 4px;
+    }
+
+    .section-main-heading {
+      font-size: 21px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .section-sub-desc {
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      margin-bottom: 18px;
+    }
+
+    .kv-meta-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      margin-bottom: 18px;
+    }
+
+    .kv-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    .kv-label {
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .kv-value {
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: right;
+    }
+
+    .japanese-pass-card {
+      background-color: var(--surface-subtle);
+      border-radius: 14px;
+      padding: 15px;
+      margin-bottom: 16px;
+      user-select: text;
+      -webkit-user-select: text;
+      border: 1px solid var(--divider-color);
+    }
+
+    .jp-badge-tag {
+      display: inline-block;
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      font-size: 11.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 5px;
+      margin-bottom: 8px;
+    }
+
+    .jp-kanji-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+
+    .jp-address-str {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .jp-phone-str {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+    }
+
+    .card-dual-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn-native-action {
+      appearance: none;
+      border: none;
+      border-radius: 14px;
+      height: 48px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .btn-native-action:active {
+      transform: scale(0.97);
+    }
+
+    .btn-action-ghost {
+      background-color: #ECEEF2;
+      color: var(--text-primary);
+    }
+
+    .btn-action-fill {
+      background-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+
+    /* =========================================================
+       컴팩트 식당 예약 카드 (스크롤 최소화)
+    ========================================================= */
+    .dining-compact-card {
+      background-color: var(--surface);
+      border: 1px solid var(--divider-color);
+      border-radius: 18px;
+      padding: 14px 16px;
+    }
+
+    .dining-compact-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .dining-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+    }
+
+    .dining-status-badge.confirmed {
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+    }
+
+    .dining-status-badge.pending {
+      background-color: #FFF3E0;
+      color: #E65100;
+    }
+
+    .dining-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .dining-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+    }
+
+    .dining-category {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+    }
+
+    .dining-jp-box {
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--divider-color);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .dining-jp-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .dining-jp-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .dining-jp-addr {
+      font-size: 11.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+
+    .btn-mini-copy {
+      appearance: none;
+      border: 1px solid var(--divider-color);
+      background-color: var(--surface);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-mini-copy:active {
+      background-color: var(--surface-pressed);
+    }
+
+    /* =========================================================
+       쇼핑몰별 쇼핑 리스트 카드
+    ========================================================= */
+    .mall-card {
+      background-color: var(--surface);
+      border: 1px solid var(--divider-color);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .mall-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--divider-color);
+    }
+
+    .mall-title-box {
+      min-width: 0;
+    }
+
+    .mall-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand-blue);
+      background-color: var(--brand-blue-soft);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-bottom: 2px;
+    }
+
+    .mall-name {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.03em;
+    }
+
+    .mall-store-list {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .mall-store-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+    }
+
+    .store-floor-pill {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-secondary);
+      background-color: var(--surface-subtle);
+      border: 1px solid var(--divider-color);
+      padding: 2px 6px;
+      border-radius: 5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+      text-align: center;
+      margin-top: 1px;
+    }
+
+    .store-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .store-name-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    .store-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .store-priority-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .store-priority-tag.must {
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+    }
+
+    .store-priority-tag.interest {
+      background-color: #FFF3E0;
+      color: #E65100;
+    }
+
+    .store-priority-tag.fun {
+      background-color: #F2F4F6;
+      color: var(--text-tertiary);
+    }
+
+    .store-target-desc {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      line-height: 1.35;
+    }
+
+    .native-toast-strip {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom));
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background-color: rgba(25, 31, 40, 0.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: #FFFFFF;
+      font-size: 14.5px;
+      font-weight: 700;
+      padding: 11px 20px;
+      border-radius: var(--radius-pill);
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s var(--ease-spring);
+      white-space: nowrap;
+    }
+
+    .native-toast-strip.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-shell">
+
+    <!-- =====================================================
+         상단 스티키 영역 (슬림 세그먼트 내비게이션 고정)
+    ===================================================== -->
+    <header class="sticky-header-zone">
+      <div class="app-topbar">
+        <div class="app-brand">
+          <span class="brand-title">후쿠오카</span>
+          <span class="brand-dates">10.24(토) – 26(월)</span>
+        </div>
+        <span class="brand-companions">롸 · 통 · 빛</span>
+      </div>
+
+      <!-- 세그먼트 탭 -->
+      <nav class="segmented-tabs">
+        <button class="seg-tab-btn active" id="navDay1" onclick="selectTopTab(1)">24일(토)</button>
+        <button class="seg-tab-btn" id="navDay2" onclick="selectTopTab(2)">25일(일)</button>
+        <button class="seg-tab-btn" id="navDay3" onclick="selectTopTab(3)">26일(월)</button>
+        <button class="seg-tab-btn info-seg" id="navInfo" onclick="selectTopTab('info')">항공·숙소</button>
+      </nav>
+    </header>
+
+    <!-- =====================================================
+         뷰 1: 일정 목록 & 동적 지도 (본문 자연 스크롤)
+    ========================================================= -->
+    <main class="view-container active" id="viewSchedule">
+      <!-- 20px 라운드 구글 지도 카드 -->
+      <div class="map-widget-wrap" id="mapBox">
+        <div class="map-day-pill" id="mapDayChip">Day 1 · 10.24(토)</div>
+        <div class="map-float-ctrls">
+          <button class="btn-map-pill" onclick="fitAllMarkers()">전체보기</button>
+          <button class="btn-map-pill" id="btnMapSize" onclick="cycleMapSize()">확대</button>
+          <button class="btn-map-pill" onclick="collapseMap(true)">접기</button>
+        </div>
+        <div id="routeMap"></div>
+        <div class="map-collapsed-strip" id="mapCollapsedBar">
+          <span class="map-collapsed-title">구글 지도가 접혀 있어요</span>
+          <button class="btn-unfold" onclick="collapseMap(false)">지도 펼치기</button>
+        </div>
+      </div>
+
+      <div class="itinerary-group-card" id="blocksContainer">
+        <!-- JS 렌더링 -->
+      </div>
+    </main>
+
+    <!-- =====================================================
+         뷰 2: 항공 · 숙소 · 예약 · 쇼핑 정보
+    ========================================================= -->
+    <section class="view-container" id="viewInfo">
+      <div class="info-chip-group">
+        <button class="chip-btn active" id="subBtnFlight" onclick="switchInfoPane('flight')">항공권</button>
+        <button class="chip-btn" id="subBtnHotel" onclick="switchInfoPane('hotel')">숙소</button>
+        <button class="chip-btn" id="subBtnDining" onclick="switchInfoPane('dining')">식당 예약</button>
+        <button class="chip-btn" id="subBtnShopping" onclick="switchInfoPane('shopping')">쇼핑 리스트</button>
+      </div>
+
+      <!-- 1. 항공권 패널 -->
+      <div class="info-content-panel active" id="paneFlight">
+        <div class="info-native-card">
+          <div class="flight-tag-line">
+            <span class="flight-type-pill">가는 비행기 · 10.24(토)</span>
+            <span class="flight-id-code">제주항공 7C1471</span>
+          </div>
+          <div class="flight-route-overview">
+            <div>
+              <div class="flight-big-time">11:10</div>
+              <div class="flight-port-name">인천 T1</div>
+            </div>
+            <div class="flight-arrow-mid">
+              <span class="flight-dur-text">1시간 30분</span>
+              <div class="flight-line-draw"></div>
+            </div>
+            <div style="text-align: right;">
+              <div class="flight-big-time">12:40</div>
+              <div class="flight-port-name">후쿠오카 국제선</div>
+            </div>
+          </div>
+          <div class="flight-meta-summary">
+            <span>일반석 (N 클래스)</span>
+            <span>위탁수하물 15kg</span>
+          </div>
+        </div>
+
+        <div class="info-native-card">
+          <div class="flight-tag-line">
+            <span class="flight-type-pill inbound">오는 비행기 · 10.26(월)</span>
+            <span class="flight-id-code">제주항공 7C1408</span>
+          </div>
+          <div class="flight-route-overview">
+            <div>
+              <div class="flight-big-time">18:55</div>
+              <div class="flight-port-name">후쿠오카 국제선</div>
+            </div>
+            <div class="flight-arrow-mid">
+              <span class="flight-dur-text">1시간 35분</span>
+              <div class="flight-line-draw"></div>
+            </div>
+            <div style="text-align: right;">
+              <div class="flight-big-time">20:30</div>
+              <div class="flight-port-name">인천 T1</div>
+            </div>
+          </div>
+          <div class="flight-meta-summary">
+            <span>일반석 (T 클래스)</span>
+            <span>위탁수하물 15kg</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 숙소 패널 -->
+      <div class="info-content-panel" id="paneHotel">
+        <div class="info-native-card">
+          <div class="section-eyebrow-text">2박 3일 베이스캠프</div>
+          <div class="section-main-heading">더 로얄 파크 캔버스<br/>후쿠오카 나카스</div>
+          <div class="section-sub-desc">나카스카와바타역 3번 출구</div>
+
+          <div class="kv-meta-stack">
+            <div class="kv-meta-row">
+              <span class="kv-label">체크인 · 체크아웃</span>
+              <span class="kv-value">15:00 · 11:00</span>
+            </div>
+            <div class="kv-meta-row">
+              <span class="kv-label">3층 대욕장 (사우나)</span>
+              <span class="kv-value">15:00–25:00 / 06:00–10:00</span>
+            </div>
+            <div class="kv-meta-row">
+              <span class="kv-label">2층 캔버스 라운지</span>
+              <span class="kv-value">투숙객 커피 무료</span>
+            </div>
+          </div>
+
+          <div class="japanese-pass-card">
+            <span class="jp-badge-tag">택시 · 입국심사서 제시용</span>
+            <div class="jp-kanji-name">ザ ロイヤルパーク キャンバス 福岡中洲</div>
+            <div class="jp-address-str">〒810-0801 福岡県福岡市博多区中洲5-6-20</div>
+            <div class="jp-phone-str">TEL 092-291-1188</div>
+          </div>
+
+          <div class="card-dual-actions">
+            <button class="btn-native-action btn-action-ghost" onclick="copyText('福岡県福岡市博多区中洲5-6-20')">주소 복사</button>
+            <a class="btn-native-action btn-action-fill" href="https://maps.apple.com/?q=The+Royal+Park+Canvas+Fukuoka+Nakasu" target="_blank" rel="noopener">지도 앱 열기</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. 식당 예약 패널 (스크롤 없는 컴팩트 뷰) -->
+      <div class="info-content-panel" id="paneDining">
+        <!-- 1) 토요일 저녁: 하카타 텐푸라 나가오카 -->
+        <div class="dining-compact-card">
+          <div class="dining-compact-top">
+            <span class="dining-status-badge confirmed">10.24(토) 17:00 · 3명 예약 완료</span>
+            <a class="item-route-icon-btn" href="https://www.google.com/maps/search/?api=1&query=博多天ぷら+ながおか+今泉" target="_blank" rel="noopener" title="구글 지도">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+            </a>
+          </div>
+          <div class="dining-title-row">
+            <span class="dining-title">하카타 텐푸라 나가오카</span>
+            <span class="dining-category">텐푸라 다이닝</span>
+          </div>
+          <div class="dining-jp-box">
+            <div class="dining-jp-info">
+              <div class="dining-jp-name">博多天ぷら ながおか (TEL 092-752-8700)</div>
+              <div class="dining-jp-addr">福岡市中央区今泉2-4-11 메조ンドール今泉 1F</div>
+            </div>
+            <button class="btn-mini-copy" onclick="copyText('福岡市中央区今泉2-4-11')">주소 복사</button>
+          </div>
+        </div>
+
+        <!-- 2) 일요일 저녁: 야키토리 토킨 -->
+        <div class="dining-compact-card">
+          <div class="dining-compact-top">
+            <span class="dining-status-badge pending">10.25(일) 18:00 · 3명 예약 진행</span>
+            <a class="item-route-icon-btn" href="https://www.google.com/maps/search/?api=1&query=焼とり+と金+今泉" target="_blank" rel="noopener" title="구글 지도">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+            </a>
+          </div>
+          <div class="dining-title-row">
+            <span class="dining-title">야키토리 토킨 (と金)</span>
+            <span class="dining-category">숯불 야키토리</span>
+          </div>
+          <div class="dining-jp-box">
+            <div class="dining-jp-info">
+              <div class="dining-jp-name">焼とり と金 今泉 (TEL 092-732-7200)</div>
+              <div class="dining-jp-addr">福岡市中央区今泉1-9-19 BuLaLaビル 102</div>
+            </div>
+            <button class="btn-mini-copy" onclick="copyText('福岡市中央区今泉1-9-19')">주소 복사</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. 쇼핑 리스트 패널 (쇼핑몰별 정리) -->
+      <div class="info-content-panel" id="paneShopping">
+
+        <!-- 1) 캐널시티 & 알펜 후쿠오카 -->
+        <div class="mall-card">
+          <div class="mall-header">
+            <div class="mall-title-box">
+              <span class="mall-badge">토요일 코스 · 러닝화 집중</span>
+              <div class="mall-name">캐널시티 & 알펜 후쿠오카</div>
+            </div>
+            <a class="item-route-icon-btn" href="https://www.google.com/maps/search/?api=1&query=Alpen+FUKUOKA" target="_blank" rel="noopener" title="구글 지도">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+            </a>
+          </div>
+          <div class="mall-store-list">
+            <div class="mall-store-item">
+              <span class="store-floor-pill">사우스 2F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">알펜 스포츠데포</span>
+                  <span class="store-priority-tag must">필수</span>
+                </div>
+                <div class="store-target-desc">On · HOKA · ASICS 러닝화 실물 비교 (오니츠카 제외)</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">센터 2F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">아식스 (ASICS)</span>
+                  <span class="store-priority-tag must">필수</span>
+                </div>
+                <div class="store-target-desc">아식스 단독 매장 모델·컬러·사이즈 추가 비교</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">OPA 3F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">노스페이스</span>
+                  <span class="store-priority-tag interest">관심</span>
+                </div>
+                <div class="store-target-desc">골프 및 일상 겸용 경량 아우터 위주 탐색</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">사우스 1·3F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">알펜 골프5 & 아웃도어</span>
+                  <span class="store-priority-tag interest">관심</span>
+                </div>
+                <div class="store-target-desc">골프용 및 일상용 기능성 아우터 비교</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">사우스 B1</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">가샤폰 백화점</span>
+                  <span class="store-priority-tag fun">재미</span>
+                </div>
+                <div class="store-target-desc">초대형 캡슐토이 가챠 & 캐릭터 기념품</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2) 원 후쿠오카 빌딩 (원빌딩) -->
+        <div class="mall-card">
+          <div class="mall-header">
+            <div class="mall-title-box">
+              <span class="mall-badge">일요일 코스 · 2025 신상 랜드마크</span>
+              <div class="mall-name">원 후쿠오카 빌딩 (원빌딩)</div>
+            </div>
+            <a class="item-route-icon-btn" href="https://www.google.com/maps/search/?api=1&query=ONE+FUKUOKA+BLDG" target="_blank" rel="noopener" title="구글 지도">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+            </a>
+          </div>
+          <div class="mall-store-list">
+            <div class="mall-store-item">
+              <span class="store-floor-pill">원빌딩 2F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">살로몬 스토어 (Salomon)</span>
+                  <span class="store-priority-tag must">필수</span>
+                </div>
+                <div class="store-target-desc">트레일러닝화 & 고기능성 테크웨어 탐색</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">원빌딩 2F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">앤드원더 (and wander)</span>
+                  <span class="store-priority-tag interest">관심</span>
+                </div>
+                <div class="store-target-desc">감각적인 디자인의 경량 재킷 & 아웃도어 가방</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">원빌딩 2F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">뉴트럴웍스 (NEUTRALWORKS)</span>
+                  <span class="store-priority-tag interest">관심</span>
+                </div>
+                <div class="store-target-desc">운동과 일상을 넘나드는 미니멀 기능성 웨어</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">원빌딩 2F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">MoMA 디자인 스토어 & 노즈숍</span>
+                  <span class="store-priority-tag fun">소품</span>
+                </div>
+                <div class="store-target-desc">현대미술관 아트 굿즈 & 니치 향수 시향</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3) 미나텐진 (mina tenjin) -->
+        <div class="mall-card">
+          <div class="mall-header">
+            <div class="mall-title-box">
+              <span class="mall-badge">일요일 실내 · 대형 패션&라이프</span>
+              <div class="mall-name">미나텐진 (mina)</div>
+            </div>
+            <a class="item-route-icon-btn" href="https://www.google.com/maps/search/?api=1&query=ミーナ天神" target="_blank" rel="noopener" title="구글 지도">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+            </a>
+          </div>
+          <div class="mall-store-list">
+            <div class="mall-store-item">
+              <span class="store-floor-pill">1~3F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">유니클로 & GU 대형점</span>
+                  <span class="store-priority-tag must">필수</span>
+                </div>
+                <div class="store-target-desc">큐슈 최대 플래그십 (1~2F 유니클로, 3F GU)</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">4F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">텐진 로프트 (LOFT)</span>
+                  <span class="store-priority-tag fun">소품</span>
+                </div>
+                <div class="store-target-desc">문구류, 트래블 소품, 뷰티 잡화</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">7F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">북오프 슈퍼바자</span>
+                  <span class="store-priority-tag fun">빈티지</span>
+                </div>
+                <div class="store-target-desc">대형 중고 의류, 빈티지 명품 및 취미용품</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4) 다이묘 & 텐진 단독 매장 -->
+        <div class="mall-card">
+          <div class="mall-header">
+            <div class="mall-title-box">
+              <span class="mall-badge">일요일 로드숍 · 스트릿&스포츠</span>
+              <div class="mall-name">다이묘 & 텐진 스포츠 로드숍</div>
+            </div>
+            <a class="item-route-icon-btn" href="https://www.google.com/maps/search/?api=1&query=大名+福岡" target="_blank" rel="noopener" title="구글 지도">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+            </a>
+          </div>
+          <div class="mall-store-list">
+            <div class="mall-store-item">
+              <span class="store-floor-pill">Luz 1~6F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">슈퍼스포츠 제비오 텐진점</span>
+                  <span class="store-priority-tag must">필수</span>
+                </div>
+                <div class="store-target-desc">와타나베도리 대형 멀티 스포츠·러닝웨어 매장 (토킨 전 방문)</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">다이묘</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">아크테릭스 후쿠오카</span>
+                  <span class="store-priority-tag interest">관심</span>
+                </div>
+                <div class="store-target-desc">기능성 고어텍스 아우터 & 경량 방풍 재킷</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">다이묘</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">뉴발란스 후쿠오카</span>
+                  <span class="store-priority-tag interest">관심</span>
+                </div>
+                <div class="store-target-desc">니시도리 단독 매장 러닝화 라인업 비교</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">텐진 북쪽</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">스트라이드 랩 (STRIDE LAB)</span>
+                  <span class="store-priority-tag fun">러닝</span>
+                </div>
+                <div class="store-target-desc">알트라(ALTRA) 등 제로드롭 전문 러닝화 편집샵</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5) 리버레인 & 나카스 (도보권) -->
+        <div class="mall-card">
+          <div class="mall-header">
+            <div class="mall-title-box">
+              <span class="mall-badge">숙소 앞 도보 1~3분</span>
+              <div class="mall-name">리버레인 & 나카스</div>
+            </div>
+            <a class="item-route-icon-btn" href="https://www.google.com/maps/search/?api=1&query=博多リバレインモール" target="_blank" rel="noopener" title="구글 지도">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+              </svg>
+            </a>
+          </div>
+          <div class="mall-store-list">
+            <div class="mall-store-item">
+              <span class="store-floor-pill">리버레인 1F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">LT LOTTO AND TRES</span>
+                  <span class="store-priority-tag must">소품</span>
+                </div>
+                <div class="store-target-desc">호텔 바로 맞은편 감각적인 리빙·인테리어 소품 편집샵</div>
+              </div>
+            </div>
+            <div class="mall-store-item">
+              <span class="store-floor-pill">게이츠 2F</span>
+              <div class="store-content">
+                <div class="store-name-row">
+                  <span class="store-name">돈키호테 나카스점</span>
+                  <span class="store-priority-tag fun">기념품</span>
+                </div>
+                <div class="store-target-desc">산토리 위스키·사케, 드럭스토어, 야간 스낵 쇼핑 (24시간)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 알림 토스트 -->
+  <div class="native-toast-strip" id="toastBar">주소를 복사했어요</div>
+
+  <script>
+    const HOTEL_INFO = {
+      name: '더 로얄 파크 캔버스 후쿠오카 나카스',
+      lat: 33.5936,
+      lng: 130.4046
+    };
+
+    const DAY_LABELS = {
+      1: 'Day 1 · 10.24(토)',
+      2: 'Day 2 · 10.25(일)',
+      3: 'Day 3 · 10.26(월)'
+    };
+
+    /* 확정된 시각만 fixedTime으로 표기, 나머지는 감성 타임 블록으로 정리 */
+    let ITINERARY_DATA = {
+      1: [
+        {
+          id: 'd1-1',
+          fixedTime: '12:40',
+          category: '공항 입국',
+          title: '후쿠오카 공항 도착',
+          desc: '제주항공 7C1471 (인천 T1 11:10 → 후쿠오카 12:40). 위탁수하물(15kg) 수령 후 국제선 무료 셔틀버스로 국내선 지하철역 이동.',
+          lat: 33.5859,
+          lng: 130.4444,
+          query: 'Fukuoka Airport International Terminal'
+        },
+        {
+          id: 'd1-2',
+          timeBlock: '체크인 전',
+          category: '숙소',
+          title: '더 로얄 파크 캔버스 나카스',
+          desc: '나카스카와바타역 3번 출구. 입국 이동 후 숙소 도착. 체크인 전 프런트에 캐리어 먼저 보관 (입실 가능 시간 별도 확인).',
+          lat: 33.5936,
+          lng: 130.4046,
+          query: 'The Royal Park Canvas Fukuoka Nakasu'
+        },
+        {
+          id: 'd1-3',
+          timeBlock: '오후 첫 코스',
+          category: '리빙·소품',
+          title: 'LT LOTTO AND TRES',
+          desc: '숙소 바로 건너편 하카타 리バレインモール 1F. 감각적인 인테리어·리빙 소품 편집샵 구경.',
+          lat: 33.5952,
+          lng: 130.4058,
+          query: 'LT LOTTO AND TRES 福岡'
+        },
+        {
+          id: 'd1-4',
+          timeBlock: '늦은 점심',
+          category: '라멘·츠케멘',
+          title: '카와바타 키린',
+          desc: '라멘·츠케멘 맛집. 자리 없거나 대기 길면 카와바타 상점가 B안 \'간소라멘 나가하마케(元祖ラーメン長浜家)\'로 이동.',
+          lat: 33.5936,
+          lng: 130.4087,
+          query: '中洲川端 きりん'
+        },
+        {
+          id: 'd1-5',
+          timeBlock: '오후 쇼핑',
+          category: '러닝화·아우터',
+          title: '캐널시티 & 알펜 후쿠오카',
+          desc: '러닝화 비교 구매 우선(알펜 2F 스포츠데포 On·HOKA·ASICS, 센터워크 2F 아식스 단독). 노스페이스 경량 아우터, 가샤폰 백화점(B1F). 17시 저녁 예약에 맞춰 쇼핑 시간 조율.',
+          lat: 33.5897,
+          lng: 130.4108,
+          query: 'Alpen FUKUOKA'
+        },
+        {
+          id: 'd1-6',
+          fixedTime: '17:00',
+          category: '저녁 예약 (3명)',
+          title: '하카타 텐푸라 나가오카',
+          desc: '★ 17:00 3명 예약 완료. 갓 튀겨내는 바삭한 텐푸라와 주류를 즐길 수 있는 이마이즈미 인기 다이닝. (주소: 福冈市中央区今泉2-4-11)',
+          lat: 33.5834,
+          lng: 130.3963,
+          query: '博多天ぷら ながおか 今泉'
+        },
+        {
+          id: 'd1-7',
+          timeBlock: '저녁 2차',
+          category: '야타이·포차',
+          title: '텐진 쇼와도리 포장마차',
+          desc: '텐진 북쪽 쇼와도리(후쿠오카은행 본점~일본은행 부근). 저녁 식사 후 2차 로컬 야타이 감성 즐기기 (1인 약 1,500~3,000엔).',
+          lat: 33.5921,
+          lng: 130.3986,
+          query: '天神 昭和通り 屋台'
+        },
+        {
+          id: 'd1-8',
+          timeBlock: '밤 일정',
+          category: '숙소 복귀',
+          title: '숙소 복귀 & 나카스 강변',
+          desc: '더 로얄 파크 캔버스 후쿠오카 나카스 복귀. 상황에 따라 강변 산책 후 3층 대욕장에서 여독 풀기.',
+          lat: 33.5936,
+          lng: 130.4046,
+          query: 'The Royal Park Canvas Fukuoka Nakasu'
+        }
+      ],
+      2: [
+        {
+          id: 'd2-2',
+          timeBlock: '텐진 점심',
+          category: '점심 선택',
+          title: '텐진 점심 (만다우동 등)',
+          desc: '원빌딩 B2 만다우동(우동), 신미우라 텐진점(오야코동·닭요리), 우미노쇼쿠도(생선 정식) 중 당일 메뉴·대기 상황 보고 선택.',
+          lat: 33.5908,
+          lng: 130.3998,
+          query: '萬田うどん 天神'
+        },
+        {
+          id: 'd2-3',
+          timeBlock: '쇼핑 ①',
+          category: '살로몬·편집숍',
+          title: '원 후쿠오카 빌딩 (살로몬)',
+          desc: '2층 살로몬 스토어, 앤드원더(and wander 경량 재킷·가방), 뉴트럴웍스(NEUTRALWORKS 운동·일상의류), MoMA 디자인스토어, 노즈숍(향수).',
+          lat: 33.5908,
+          lng: 130.3998,
+          query: 'ONE FUKUOKA BLDG'
+        },
+        {
+          id: 'd2-4',
+          timeBlock: '쇼핑 ②',
+          category: '패션·라이프',
+          title: '미나텐진 (유니클로·GU)',
+          desc: '1~2층 대형 유니클로, 3층 GU, 4층 텐진 로프트(문구·소품), 7층 북오프 슈퍼바자(중고 의류·취미). 텐진 북쪽 스트라이드랩(알트라 러닝화) 인접.',
+          lat: 33.5932,
+          lng: 130.3983,
+          query: 'ミーナ天神'
+        },
+        {
+          id: 'd2-5',
+          timeBlock: '쇼핑 ③',
+          category: '스포츠·다이묘',
+          title: '무라사키스포츠 & 다이묘',
+          desc: '무라사키스포츠, 뉴발란스 후쿠오카, 아크테릭스 다이묘점(기능성 아우터). 카페 휴식 또는 프리쿠라(스티커사진) 촬영.',
+          lat: 33.5885,
+          lng: 130.3945,
+          query: '大名 福岡'
+        },
+        {
+          id: 'd2-6',
+          timeBlock: '쇼핑 ④',
+          category: '스포츠의류',
+          title: '슈퍼스포츠 제비오 텐진점',
+          desc: 'Luz후쿠오카텐진 1F~6F. 토킨 저녁 전 방문. 아웃도어·러닝웨어 및 스포츠 용품 구경. (주소: 福岡市中央区渡辺通4-9-25)',
+          lat: 33.5869,
+          lng: 130.4016,
+          query: 'スーパースポーツゼビオ 福岡天神店'
+        },
+        {
+          id: 'd2-7',
+          fixedTime: '18:00',
+          category: '저녁 예약 (3명)',
+          title: '야키토리 토킨',
+          desc: '★ 18:00 3명 예약 진행. 이마이즈미 숯불 야키토리 전문점. 신선한 닭꼬치와 사케. (주소: 福岡市中央区今泉1-9-19 BuLaLa빌딩 102)',
+          lat: 33.5859,
+          lng: 130.4001,
+          query: '焼とり と金 今泉'
+        },
+        {
+          id: 'd2-8',
+          timeBlock: '밤 야식',
+          category: '장어덮밥 포장',
+          title: '장어덮밥 포장 & 숙소 복귀',
+          desc: '장어덮밥 포장 픽업 후 호텔 복귀. 캔버스 숙소에서 즐기는 야식 & 3층 대욕장 힐링.',
+          lat: 33.5936,
+          lng: 130.4046,
+          query: 'The Royal Park Canvas Fukuoka Nakasu'
+        }
+      ],
+      3: [
+        {
+          id: 'd3-1',
+          fixedTime: '11:00',
+          category: '체크아웃',
+          title: '호텔 체크아웃',
+          desc: '더 로얄 파크 캔버스 후쿠오카 나카스 체크아웃 후 프런트에 캐리어 보관.',
+          lat: 33.5936,
+          lng: 130.4046,
+          query: 'The Royal Park Canvas Fukuoka Nakasu'
+        },
+        {
+          id: 'd3-2',
+          timeBlock: '오전 쇼핑',
+          category: '기념품',
+          title: '돈키호테 나카스점',
+          desc: '숙소 바로 앞 돈키호테 및 나카스카와바타 상점가 쇼핑 후 호텔에 맡긴 캐리어에 짐 정리.',
+          lat: 33.5931,
+          lng: 130.4055,
+          query: 'Don Quijote Nakasu'
+        },
+        {
+          id: 'd3-3',
+          timeBlock: '마지막 점심',
+          category: '카페·식사',
+          title: '텐진 점심 & 카페',
+          desc: '출국 전 마지막 후쿠오카 로컬 식사 및 디저트 카페 여유.',
+          lat: 33.5902,
+          lng: 130.3990,
+          query: 'Tenjin Fukuoka'
+        },
+        {
+          id: 'd3-4',
+          fixedTime: '18:55',
+          category: '공항 출국',
+          title: '후쿠오카 공항 출국',
+          desc: '제주항공 7C1408 (18:55 출발 → 20:30 인천 도착). 16:30~16:50 공항 도착 권장. 수하물 위탁(15kg).',
+          lat: 33.5859,
+          lng: 130.4444,
+          query: 'Fukuoka Airport International Terminal'
+        }
+      ]
+    };
+
+    let currentDay = 1;
+    let selectedBlockId = null;
+    let map = null;
+    let markersLayer = null;
+    let markerMap = {};
+    let isMapExpanded = false;
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      });
+    }
+
+    function initMap() {
+      map = L.map('routeMap', {
+        zoomControl: false,
+        attributionControl: false
+      }).setView([HOTEL_INFO.lat, HOTEL_INFO.lng], 14);
+
+      L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&hl=ko&x={x}&y={y}&z={z}', {
+        subdomains: ['0', '1', '2', '3'],
+        maxZoom: 20
+      }).addTo(map);
+
+      markersLayer = L.layerGroup().addTo(map);
+    }
+
+    function selectTopTab(target) {
+      const isInfo = target === 'info';
+
+      [1, 2, 3].forEach(d => {
+        const btn = document.getElementById(`navDay${d}`);
+        if (btn) btn.classList.toggle('active', d === target);
+      });
+      const navInfo = document.getElementById('navInfo');
+      if (navInfo) navInfo.classList.toggle('active', isInfo);
+
+      const mapBox = document.getElementById('mapBox');
+      const viewSchedule = document.getElementById('viewSchedule');
+      const viewInfo = document.getElementById('viewInfo');
+
+      if (mapBox) mapBox.style.display = isInfo ? 'none' : 'block';
+      if (viewSchedule) viewSchedule.classList.toggle('active', !isInfo);
+      if (viewInfo) viewInfo.classList.toggle('active', isInfo);
+
+      if (!isInfo) {
+        currentDay = target;
+        selectedBlockId = null;
+        const dayChip = document.getElementById('mapDayChip');
+        if (dayChip) dayChip.textContent = DAY_LABELS[currentDay] || '';
+        renderDayList(currentDay);
+        setTimeout(() => {
+          if (map) {
+            map.invalidateSize();
+            fitAllMarkers();
+          }
+        }, 60);
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function switchInfoPane(paneKey) {
+      const keys = ['flight', 'hotel', 'dining', 'shopping'];
+      const btnIds = { flight: 'subBtnFlight', hotel: 'subBtnHotel', dining: 'subBtnDining', shopping: 'subBtnShopping' };
+      const paneIds = { flight: 'paneFlight', hotel: 'paneHotel', dining: 'paneDining', shopping: 'paneShopping' };
+
+      keys.forEach(k => {
+        const btn = document.getElementById(btnIds[k]);
+        const pane = document.getElementById(paneIds[k]);
+        if (btn) btn.classList.toggle('active', k === paneKey);
+        if (pane) pane.classList.toggle('active', k === paneKey);
+      });
+    }
+
+    function renderDayList(dayNum) {
+      const blocks = ITINERARY_DATA[dayNum] || [];
+      const container = document.getElementById('blocksContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      blocks.forEach((item, idx) => {
+        const stepNum = idx + 1;
+        const isSelected = selectedBlockId === item.id;
+        const gmapAppUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query || item.title)}`;
+
+        const itemEl = document.createElement('div');
+        itemEl.className = `itinerary-item ${isSelected ? 'selected' : ''}`;
+        itemEl.id = `c-block-${item.id}`;
+
+        const safeTitle = escapeHtml(item.title);
+        const safeCat = escapeHtml(item.category);
+        const safeDesc = escapeHtml(item.desc);
+
+        // 확정 시간 vs 감성 타임블록 렌더링 분기
+        let timeTagHtml = '';
+        if (item.fixedTime) {
+          timeTagHtml = `<span class="time-badge-fixed">${escapeHtml(item.fixedTime)}</span>`;
+        } else if (item.timeBlock) {
+          timeTagHtml = `<span>${escapeHtml(item.timeBlock)}</span>`;
+        }
+
+        itemEl.innerHTML = `
+          <div class="item-main-row">
+            <div class="item-badge-wrap">
+              <div class="item-order-pin">${stepNum}</div>
+            </div>
+            <div class="item-content-wrap">
+              <div class="item-title-text">${safeTitle}</div>
+              <div class="item-sub-caption">
+                ${timeTagHtml}
+                <span>·</span>
+                <span>${safeCat}</span>
+              </div>
+            </div>
+            <div class="item-actions-wrap">
+              <a class="item-route-icon-btn" href="${gmapAppUrl}" target="_blank" rel="noopener" title="구글 지도 길찾기" onclick="event.stopPropagation()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                </svg>
+              </a>
+              <div class="item-drag-handle" title="드래그하여 순서 변경" aria-label="순서 드래그">
+                <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 2H13M1 5.5H13M1 9H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="item-drawer-panel">
+            <div class="drawer-memo-card">${safeDesc}</div>
+            <a class="drawer-route-link" href="${gmapAppUrl}" target="_blank" rel="noopener">
+              <span>길찾기 (구글 지도)</span>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.5 2H10M10 2V8.5M10 2L2 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        `;
+
+        const row = itemEl.querySelector('.item-main-row');
+        if (row) {
+          row.addEventListener('click', (e) => {
+            if (e.target.closest('.item-route-icon-btn') || e.target.closest('.item-drag-handle')) return;
+            onTapBlock(item.id, item.lat, item.lng);
+          });
+        }
+
+        container.appendChild(itemEl);
+      });
+
+      renderMapMarkers(blocks);
+      initSortable();
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function onTapBlock(blockId, lat, lng) {
+      if (selectedBlockId === blockId) {
+        selectedBlockId = null;
+        renderDayList(currentDay);
+        fitAllMarkers();
+        return;
+      }
+
+      selectedBlockId = blockId;
+      renderDayList(currentDay);
+
+      const mapBox = document.getElementById('mapBox');
+      if (mapBox) {
+        const rect = mapBox.getBoundingClientRect();
+        if (rect.top < 60) {
+          mapBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      if (map) {
+        map.setView([lat, lng], 16, { animate: true });
+        if (markerMap[blockId]) {
+          markerMap[blockId].openPopup();
+        }
+      }
+    }
+
+    function renderMapMarkers(blocks) {
+      if (!map || !markersLayer) return;
+      markersLayer.clearLayers();
+      markerMap = {};
+
+      const latlngs = [];
+
+      const hasHotelInBlocks = blocks.some(
+        b => Math.abs(b.lat - HOTEL_INFO.lat) < 0.0002 && Math.abs(b.lng - HOTEL_INFO.lng) < 0.0002
+      );
+
+      if (!hasHotelInBlocks) {
+        const hotelIcon = L.divIcon({
+          className: 'map-marker-container',
+          html: `<div class="marker-hotel-badge">숙소</div>`,
+          iconSize: [48, 28],
+          iconAnchor: [24, 14],
+          popupAnchor: [0, -16]
+        });
+
+        const safeHotelName = escapeHtml(HOTEL_INFO.name);
+        L.marker([HOTEL_INFO.lat, HOTEL_INFO.lng], { icon: hotelIcon, zIndexOffset: -50 })
+          .bindPopup(`<span class="callout-badge" style="background:#191F28">숙소</span> <span>${safeHotelName}</span>`, { closeButton: false })
+          .addTo(markersLayer);
+      }
+
+      blocks.forEach((item, idx) => {
+        const stepNum = idx + 1;
+        const isSelected = selectedBlockId === item.id;
+        const coords = [item.lat, item.lng];
+        latlngs.push(coords);
+
+        const size = isSelected ? 36 : 30;
+        const half = size / 2;
+
+        const pinIcon = L.divIcon({
+          className: 'map-marker-container',
+          html: `<div class="marker-circle ${isSelected ? 'active' : ''}">${stepNum}</div>`,
+          iconSize: [size, size],
+          iconAnchor: [half, half],
+          popupAnchor: [0, -(half + 4)]
+        });
+
+        const safeItemTitle = escapeHtml(item.title);
+        const marker = L.marker(coords, { icon: pinIcon, zIndexOffset: isSelected ? 500 : 100 + idx })
+          .bindPopup(`<span class="callout-badge">${stepNum}</span> <span>${safeItemTitle}</span>`, { closeButton: false })
+          .addTo(markersLayer);
+
+        marker.on('click', () => {
+          selectedBlockId = item.id;
+          renderDayList(currentDay);
+          if (markerMap[item.id]) {
+            markerMap[item.id].openPopup();
+          }
+        });
+
+        markerMap[item.id] = marker;
+      });
+
+      if (latlngs.length > 1) {
+        L.polyline(latlngs, {
+          color: '#3182F6',
+          weight: 3.5,
+          dashArray: '6, 6',
+          opacity: 0.85
+        }).addTo(markersLayer);
+      }
+
+      if (!selectedBlockId) {
+        fitAllMarkers();
+      }
+    }
+
+    function fitAllMarkers() {
+      const blocks = ITINERARY_DATA[currentDay] || [];
+      if (!map || blocks.length === 0) return;
+      const bounds = L.latLngBounds(blocks.map(b => [b.lat, b.lng]));
+      bounds.extend([HOTEL_INFO.lat, HOTEL_INFO.lng]);
+      map.fitBounds(bounds, { padding: [36, 36], maxZoom: 15 });
+    }
+
+    function cycleMapSize() {
+      const mapEl = document.getElementById('routeMap');
+      const btn = document.getElementById('btnMapSize');
+      if (!mapEl || !btn) return;
+      isMapExpanded = !isMapExpanded;
+      mapEl.classList.toggle('expanded', isMapExpanded);
+      btn.textContent = isMapExpanded ? '기본크기' : '확대';
+      setTimeout(() => {
+        if (map) {
+          map.invalidateSize();
+          fitAllMarkers();
+        }
+      }, 260);
+    }
+
+    function collapseMap(collapse) {
+      const mapEl = document.getElementById('routeMap');
+      const floatCtrls = document.querySelector('.map-float-ctrls');
+      const dayChip = document.getElementById('mapDayChip');
+      const collapsedBar = document.getElementById('mapCollapsedBar');
+      if (!mapEl) return;
+
+      mapEl.classList.toggle('collapsed', collapse);
+      if (floatCtrls) floatCtrls.style.display = collapse ? 'none' : 'flex';
+      if (dayChip) dayChip.style.display = collapse ? 'none' : 'block';
+      if (collapsedBar) collapsedBar.classList.toggle('show', collapse);
+
+      if (!collapse) {
+        setTimeout(() => {
+          if (map) {
+            map.invalidateSize();
+            fitAllMarkers();
+          }
+        }, 260);
+      }
+    }
+
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast('주소를 복사했어요')).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast('주소를 복사했어요');
+      } catch (err) {
+        showToast('주소를 직접 복사해주세요');
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const bar = document.getElementById('toastBar');
+      if (!bar) return;
+      bar.textContent = msg;
+      bar.classList.add('show');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => bar.classList.remove('show'), 1600);
+    }
+
+    /* =========================================================
+       드래그 앤 드롭 (Sortable) 순서 관리
+    ========================================================= */
+    let sortableInstance = null;
+    const STORAGE_KEY = 'fukuoka_itinerary_order_v2';
+
+    function initSortable() {
+      const container = document.getElementById('blocksContainer');
+      if (!container || typeof Sortable === 'undefined') return;
+
+      if (sortableInstance) {
+        sortableInstance.destroy();
+      }
+
+      sortableInstance = new Sortable(container, {
+        handle: '.item-drag-handle',
+        animation: 200,
+        easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        forceFallback: true,        // 모바일 터치 환경에서 확실한 드래그 반응을 위해 터치 폴백 활성화
+        fallbackOnBody: true,       // 드래그 중인 요소를 body 최상단에 띄워 좌표 튐 방지
+        fallbackTolerance: 3,       // 가벼운 터치 탭과 드래그 구분 (3px 이동 시 드래그 시작)
+        touchStartThreshold: 3,
+        scroll: true,
+        scrollSensitivity: 60,
+        scrollSpeed: 12,
+        bubbleScroll: true,
+        onEnd: function (evt) {
+          if (evt.oldIndex === evt.newIndex) return;
+
+          const list = ITINERARY_DATA[currentDay];
+          if (!list) return;
+
+          const [movedItem] = list.splice(evt.oldIndex, 1);
+          list.splice(evt.newIndex, 0, movedItem);
+
+          saveItineraryOrder();
+          updateStepNumbersAndMap();
+          showToast('일정 순서를 변경했어요');
+        }
+      });
+    }
+
+    function updateStepNumbersAndMap() {
+      const container = document.getElementById('blocksContainer');
+      if (container) {
+        const items = container.querySelectorAll('.itinerary-item');
+        items.forEach((itemEl, idx) => {
+          const pin = itemEl.querySelector('.item-order-pin');
+          if (pin) pin.textContent = idx + 1;
+        });
+      }
+
+      const blocks = ITINERARY_DATA[currentDay] || [];
+      renderMapMarkers(blocks);
+    }
+
+    function loadSavedItinerary() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed) {
+            [1, 2, 3].forEach(day => {
+              if (Array.isArray(parsed[day])) {
+                const currentList = ITINERARY_DATA[day];
+                const itemMap = new Map(currentList.map(item => [item.id, item]));
+                const reordered = [];
+                parsed[day].forEach(id => {
+                  if (itemMap.has(id)) {
+                    reordered.push(itemMap.get(id));
+                    itemMap.delete(id);
+                  }
+                });
+                itemMap.forEach(item => reordered.push(item));
+                if (reordered.length > 0) {
+                  ITINERARY_DATA[day] = reordered;
+                }
+              }
+            });
+          }
+        }
+      } catch (e) {
+        console.warn('저장된 일정 불러오기 실패:', e);
+      }
+    }
+
+    function saveItineraryOrder() {
+      try {
+        const orderData = {
+          1: (ITINERARY_DATA[1] || []).map(item => item.id),
+          2: (ITINERARY_DATA[2] || []).map(item => item.id),
+          3: (ITINERARY_DATA[3] || []).map(item => item.id)
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(orderData));
+      } catch (e) {
+        console.warn('일정 순서 저장 실패:', e);
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedItinerary();
+      initMap();
+      renderDayList(1);
+    });
+  </script>
+</body>
+</html>

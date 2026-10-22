@@ -1,0 +1,157 @@
+{
+  "meta": {
+    "title": "아프리카 여행 메모",
+    "target": "케냐 & 탄자니아",
+    "period": "2027년 상반기 (미확정)",
+    "budget": "1인 500만원 선"
+  },
+  "questions": [
+    {
+      "id": "q-1",
+      "question": "황열병 예방접종은 언제까지 맞아야 하나요?",
+      "author": "동현",
+      "status": "open",
+      "answers": [
+        {
+          "id": "a-1",
+          "author": "민지",
+          "text": "출발 최소 10일 전까지는 맞아야 옐로카드가 유효함"
+        },
+        {
+          "id": "a-1792055977822",
+          "author": "준호",
+          "text": "ㅇㅇㅇ"
+        }
+      ]
+    },
+    {
+      "id": "q-2",
+      "question": "사파리 갈 때 옷은 카키색 꼭 사야 하나?",
+      "author": "준호",
+      "status": "open",
+      "answers": [
+        {
+          "id": "a-2",
+          "author": "동현",
+          "text": "어두운 파란색이나 검은색은 체체파리가 꼬여서 피하고, 먼지 티 안 나는 베이지/카키 추천"
+        }
+      ]
+    }
+  ],
+  "ideas": [
+    {
+      "id": "idea-1792055951999",
+      "text": "ㅇㅇㅇ",
+      "link": "",
+      "author": "준호"
+    },
+    {
+      "id": "idea-1",
+      "text": "마사이마라 국립공원 3박 4일 사파리 투어 알아보기",
+      "link": "https://en.wikipedia.org/wiki/Maasai_Mara",
+      "author": "준호"
+    },
+    {
+      "id": "idea-2",
+      "text": "사파리 끝나고 잔지바르 섬 능귀 비치에서 2박 휴양",
+      "link": "",
+      "author": "민지"
+    }
+  ],
+  "scrapbook": {
+    "col1Title": "사파리 & 국립공원",
+    "col1Html": "• 마사이마라 3박 4일 지프 사파리 (빅5 관측)\n• 세렝게티 열기구 투어 알아보기\n• 참고 링크: https://en.wikipedi<span style=\"color: var(--toss-text-title);\">a.org/wiki/Maasai_Mara</span><div><span style=\"color: var(--toss-text-title);\"><br></span></div><div><span style=\"color: var(--toss-text-title);\">- dd</span></div>",
+    "col2Title": "휴양지 & 숙소/맛집",
+    "col2Html": "• 잔지바르 섬 능귀 비치 2박 휴양\n• 더 락(The Rock) 레스토랑 선셋 예약d"
+  },
+  "scrapboards": [
+    {
+      "id": "sb-1",
+      "title": "사파리 & 국립공원",
+      "html": "• 마사이마라 3박 4일 지프 사파리 (빅5 관측)\n• 세렝게티 열기구 투어 알아보기\n• 참고 링크: https://en.wikipedi<span style=\"color: var(--toss-text-title);\">a.org/wiki/Maasai_Mara</span><div><span style=\"color: var(--toss-text-title);\"><br></span></div><div><span style=\"color: var(--toss-text-title);\">- dddd</span></div><div>- dddd<span style=\"color: var(--toss-text-title);\">- dddd</span><span style=\"color: var(--toss-text-title);\">- dddd</span><span style=\"color: var(--toss-text-title);\"><br></span></div><div>- dddd<span style=\"color: var(--toss-text-title);\"><br></span></div><div>- dd</div>"
+    },
+    {
+      "id": "sb-2",
+      "title": "휴양지 & 숙소/맛집",
+      "html": "• 잔지바르 섬 능귀 비치 2박 휴양\n• 더 락(The Rock) 레스토랑 선셋 예약d"
+    },
+    {
+      "id": "sb-1792057499672",
+      "title": "메모장 3",
+      "html": ""
+    },
+    {
+      "id": "sb-1792057501921",
+      "title": "메모장 4",
+      "html": ""
+    }
+  ],
+  "days": [
+    {
+      "day": 1,
+      "title": "나이로비 입국 & 가이드 미팅ㅇㅇ",
+      "items": [
+        {
+          "id": "di-1",
+          "text": "나이로비 공항 도착 및 현지 유심 개통"
+        },
+        {
+          "id": "di-2",
+          "text": "사파리 투어사 전용 지프 미팅 및 시내 숙소 이동"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "마사이마라 이동 & 첫 사파리",
+      "items": [
+        {
+          "id": "di-3",
+          "text": "차량으로 마사이마라 이동 (약 5시간)"
+        },
+        {
+          "id": "di-4",
+          "text": "롯지 체크인 후 오후 일몰 게임드라이브"
+        }
+      ]
+    }
+  ],
+  "checklist": [
+    {
+      "id": "chk-1",
+      "text": "황열병 백신 접종 (출발 10일 전 필수)",
+      "assignee": "전원",
+      "done": false
+    },
+    {
+      "id": "chk-2",
+      "text": "여권 유효기간 6개월 이상 확인",
+      "assignee": "전원",
+      "done": false
+    },
+    {
+      "id": "chk-3",
+      "text": "케냐 전자여행허가(eTA) 신청",
+      "assignee": "준호",
+      "done": false
+    },
+    {
+      "id": "chk-4",
+      "text": "미국 달러 2013년 이후 빳빳한 신권 환전",
+      "assignee": "동현",
+      "done": false
+    },
+    {
+      "id": "chk-5",
+      "text": "사파리용 고배율 쌍안경 준비",
+      "assignee": "민지",
+      "done": false
+    },
+    {
+      "id": "chk-1792054017687",
+      "text": "신청하기",
+      "assignee": "준호",
+      "done": false
+    }
+  ]
+}

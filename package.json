@@ -1,0 +1,12 @@
+{
+  "name": "africa-travel-planner",
+  "version": "1.0.0",
+  "description": "Collaborative travel planner for Africa trip",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
