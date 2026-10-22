@@ -1100,8 +1100,14 @@
     .mall-acc-actions {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       flex-shrink: 0;
+    }
+
+    .mall-acc-actions-sep {
+      width: 1px;
+      height: 14px;
+      background-color: var(--divider-color);
     }
 
     .mall-acc-chevron {
@@ -1155,17 +1161,19 @@
     }
 
     .floor-num-badge {
-      font-size: 11.5px;
-      font-weight: 800;
-      color: #FFFFFF;
-      background-color: var(--text-primary);
-      padding: 2px 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #4E5968;
+      background-color: #ECEEF2;
+      border: 1px solid #E2E6EA;
+      padding: 2px 6px;
       border-radius: 6px;
       flex-shrink: 0;
       margin-top: 1px;
       line-height: 1.25;
       text-align: center;
       min-width: 28px;
+      letter-spacing: -0.02em;
     }
 
     .floor-store-content {
@@ -1182,6 +1190,12 @@
       gap: 2px;
     }
 
+    .floor-store-entry + .floor-store-entry {
+      border-top: 1px dashed #E5E8EB;
+      padding-top: 7px;
+      margin-top: 2px;
+    }
+
     .floor-store-name {
       font-size: 14.5px;
       font-weight: 700;
@@ -1190,6 +1204,28 @@
       align-items: center;
       gap: 6px;
       letter-spacing: -0.02em;
+    }
+
+    .store-map-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background-color: #ECEEF2;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      flex-shrink: 0;
+      margin-left: auto;
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .store-map-link:active {
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      transform: scale(0.92);
     }
 
     .bldg-label {
@@ -1203,10 +1239,10 @@
     }
 
     .floor-store-detail {
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--text-secondary);
-      line-height: 1.35;
+      line-height: 1.4;
     }
 
     .native-toast-strip {
@@ -1439,6 +1475,7 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
+                <div class="mall-acc-actions-sep"></div>
                 <div class="mall-acc-chevron">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"/>
@@ -1460,7 +1497,7 @@
                     </div>
                     <div class="floor-store-entry">
                       <div class="floor-store-name">아식스 (ASICS) <span class="bldg-label">센터 2F</span></div>
-                      <div class="floor-store-detail">아식스 단독 매장 모델·컬러·사이즈 비교</div>
+                      <div class="floor-store-detail">인기 러닝화 모델 & 사이즈 단독 비교</div>
                     </div>
                   </div>
                 </div>
@@ -1469,11 +1506,11 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">노스페이스 <span class="bldg-label">OPA 3F</span></div>
-                      <div class="floor-store-detail">골프 및 일상 겸용 경량 아우터 위주 탐색</div>
+                      <div class="floor-store-detail">골프 & 일상 겸용 경량 아우터 탐색</div>
                     </div>
                     <div class="floor-store-entry">
                       <div class="floor-store-name">알펜 아웃도어 <span class="bldg-label">사우스 3F</span></div>
-                      <div class="floor-store-detail">아웃도어·러닝용 기능성 아우터 비교</div>
+                      <div class="floor-store-detail">아웃도어·러닝용 기능성 아우터 라인업</div>
                     </div>
                   </div>
                 </div>
@@ -1482,7 +1519,7 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">알펜 골프5 <span class="bldg-label">사우스 1F</span></div>
-                      <div class="floor-store-detail">골프웨어 및 일상용 아우터 비교</div>
+                      <div class="floor-store-detail">골프웨어 & 일상용 아우터 비교</div>
                     </div>
                   </div>
                 </div>
@@ -1512,6 +1549,7 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
+                <div class="mall-acc-actions-sep"></div>
                 <div class="mall-acc-chevron">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"/>
@@ -1526,15 +1564,15 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">살로몬 스토어 (Salomon)</div>
-                      <div class="floor-store-detail">트레일러닝화 & 고기능성 테크웨어 탐색</div>
+                      <div class="floor-store-detail">XT-6 등 트레일러닝화 & 고기능성 테크웨어</div>
                     </div>
                     <div class="floor-store-entry">
                       <div class="floor-store-name">앤드원더 (and wander)</div>
-                      <div class="floor-store-detail">감각적인 디자인의 경량 재킷 & 아웃도어 가방</div>
+                      <div class="floor-store-detail">디자인 경량 재킷 & 아웃도어 백</div>
                     </div>
                     <div class="floor-store-entry">
                       <div class="floor-store-name">뉴트럴웍스 (NEUTRALWORKS)</div>
-                      <div class="floor-store-detail">운동과 일상을 넘나드는 미니멀 기능성 웨어</div>
+                      <div class="floor-store-detail">미니멀 기능성 웨어 & 일상 액티브룩</div>
                     </div>
                     <div class="floor-store-entry">
                       <div class="floor-store-name">MoMA 디자인 스토어 & 노즈숍</div>
@@ -1547,7 +1585,7 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">만다우동 · 신미우라 · 우미노쇼쿠도</div>
-                      <div class="floor-store-detail">자가제면 우동 / 오야코동 / 생선정식 당일 대기 보고 선택</div>
+                      <div class="floor-store-detail">자가제면 우동 / 오야코동 / 생선정식 (당일 대기 보고 선택)</div>
                     </div>
                   </div>
                 </div>
@@ -1568,6 +1606,7 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
+                <div class="mall-acc-actions-sep"></div>
                 <div class="mall-acc-chevron">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"/>
@@ -1582,7 +1621,7 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">유니클로 (UNIQLO)</div>
-                      <div class="floor-store-detail">큐슈 최대 규모 초대형 플래그십, 라이프웨어 전 라인업</div>
+                      <div class="floor-store-detail">큐슈 최대 규모 플래그십 · 전 라인업</div>
                     </div>
                   </div>
                 </div>
@@ -1591,7 +1630,7 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">GU (지유)</div>
-                      <div class="floor-store-detail">가성비 트렌디 캐주얼 및 이너웨어 대형 매장</div>
+                      <div class="floor-store-detail">가성비 트렌디 캐주얼 & 데일리 이너웨어</div>
                     </div>
                   </div>
                 </div>
@@ -1600,7 +1639,7 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">텐진 로프트 (LOFT)</div>
-                      <div class="floor-store-detail">디자인 문구류, 트래블 소품, 뷰티 잡화</div>
+                      <div class="floor-store-detail">디자인 문구 · 트래블 소품 · 뷰티 잡화</div>
                     </div>
                   </div>
                 </div>
@@ -1609,7 +1648,7 @@
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
                       <div class="floor-store-name">북오프 슈퍼바자 (BOOKOFF)</div>
-                      <div class="floor-store-detail">대형 중고 의류, 빈티지 명품 및 취미용품</div>
+                      <div class="floor-store-detail">대형 빈티지 의류 · 명품 & 피규어 취미</div>
                     </div>
                   </div>
                 </div>
@@ -1630,6 +1669,7 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
+                <div class="mall-acc-actions-sep"></div>
                 <div class="mall-acc-chevron">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"/>
@@ -1643,8 +1683,16 @@
                   <div class="floor-num-badge">1~6F</div>
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
-                      <div class="floor-store-name">슈퍼스포츠 제비오 텐진점 <span class="bldg-label">Luz 빌딩</span></div>
-                      <div class="floor-store-detail">1F~6F 대형 멀티 스포츠·러닝웨어 매장 (18시 토킨 전 방문)</div>
+                      <div class="floor-store-name">
+                        <span>슈퍼스포츠 제비오 텐진점</span>
+                        <span class="bldg-label">Luz 빌딩</span>
+                        <a class="store-map-link" href="https://www.google.com/maps/search/?api=1&query=Super+Sports+Xebio+Fukuoka+Tenjin" target="_blank" rel="noopener" title="제비오 구글 지도">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                          </svg>
+                        </a>
+                      </div>
+                      <div class="floor-store-detail">1F~6F 초대형 멀티 스포츠 & 러닝웨어 (18시 토킨 전 방문)</div>
                     </div>
                   </div>
                 </div>
@@ -1652,15 +1700,39 @@
                   <div class="floor-num-badge">로드숍</div>
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
-                      <div class="floor-store-name">아크테릭스 후쿠오카 <span class="bldg-label">다이묘</span></div>
-                      <div class="floor-store-detail">기능성 고어텍스 아우터 & 경량 방풍 재킷</div>
+                      <div class="floor-store-name">
+                        <span>아크테릭스 후쿠오카</span>
+                        <span class="bldg-label">다이묘</span>
+                        <a class="store-map-link" href="https://www.google.com/maps/search/?api=1&query=Arc%27teryx+Fukuoka" target="_blank" rel="noopener" title="아크테릭스 구글 지도">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                          </svg>
+                        </a>
+                      </div>
+                      <div class="floor-store-detail">고어텍스 아우터 & 경량 방풍 재킷</div>
                     </div>
                     <div class="floor-store-entry">
-                      <div class="floor-store-name">뉴발란스 후쿠오카 <span class="bldg-label">니시도리</span></div>
-                      <div class="floor-store-detail">니시도리 단독 매장 러닝화 라인업 비교</div>
+                      <div class="floor-store-name">
+                        <span>뉴발란스 후쿠오카</span>
+                        <span class="bldg-label">니시도리</span>
+                        <a class="store-map-link" href="https://www.google.com/maps/search/?api=1&query=New+Balance+Fukuoka" target="_blank" rel="noopener" title="뉴발란스 구글 지도">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                          </svg>
+                        </a>
+                      </div>
+                      <div class="floor-store-detail">단독 매장 러닝화 & 라이프스타일 라인업</div>
                     </div>
                     <div class="floor-store-entry">
-                      <div class="floor-store-name">스트라이드 랩 (STRIDE LAB) <span class="bldg-label">텐진 북쪽</span></div>
+                      <div class="floor-store-name">
+                        <span>스트라이드 랩 (STRIDE LAB)</span>
+                        <span class="bldg-label">텐진 북쪽</span>
+                        <a class="store-map-link" href="https://www.google.com/maps/search/?api=1&query=STRIDE+LAB+FUKUOKA" target="_blank" rel="noopener" title="스트라이드 랩 구글 지도">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                          </svg>
+                        </a>
+                      </div>
                       <div class="floor-store-detail">알트라(ALTRA) 등 제로드롭 전문 러닝화 편집샵</div>
                     </div>
                   </div>
@@ -1682,6 +1754,7 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
+                <div class="mall-acc-actions-sep"></div>
                 <div class="mall-acc-chevron">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="6 9 12 15 18 9"/>
@@ -1695,7 +1768,15 @@
                   <div class="floor-num-badge">1F</div>
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
-                      <div class="floor-store-name">LT LOTTO AND TRES <span class="bldg-label">리버레인몰</span></div>
+                      <div class="floor-store-name">
+                        <span>LT LOTTO AND TRES</span>
+                        <span class="bldg-label">리버레인몰</span>
+                        <a class="store-map-link" href="https://www.google.com/maps/search/?api=1&query=LT+LOTTO+AND+TRES" target="_blank" rel="noopener" title="LT LOTTO 구글 지도">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                          </svg>
+                        </a>
+                      </div>
                       <div class="floor-store-detail">호텔 바로 맞은편 감각적인 리빙·인테리어 소품 편집샵</div>
                     </div>
                   </div>
@@ -1704,8 +1785,16 @@
                   <div class="floor-num-badge">2F</div>
                   <div class="floor-store-content">
                     <div class="floor-store-entry">
-                      <div class="floor-store-name">돈키호테 나카스점 <span class="bldg-label">게이츠</span></div>
-                      <div class="floor-store-detail">산토리 위스키·사케, 드럭스토어, 야간 스낵 쇼핑 (24시간)</div>
+                      <div class="floor-store-name">
+                        <span>돈키호테 나카스점</span>
+                        <span class="bldg-label">게이츠</span>
+                        <a class="store-map-link" href="https://www.google.com/maps/search/?api=1&query=Don+Quijote+Nakasu" target="_blank" rel="noopener" title="돈키호테 나카스점 구글 지도">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                          </svg>
+                        </a>
+                      </div>
+                      <div class="floor-store-detail">산토리 위스키 · 사케 · 드럭스토어 · 간식 (24시간)</div>
                     </div>
                   </div>
                 </div>
@@ -2419,6 +2508,7 @@
             target.closest('.item-route-icon-btn') ||
             target.closest('.btn-native-action') ||
             target.closest('.btn-mini-copy') ||
+            target.closest('.store-map-link') ||
             target.closest('.mall-acc-header')) {
           isTracking = false;
           return;
