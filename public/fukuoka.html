@@ -1564,6 +1564,32 @@
       line-height: 1.5;
     }
 
+  
+    .btn-app-refresh {
+      appearance: none;
+      border: 1px solid var(--divider-color);
+      background-color: var(--surface);
+      color: var(--text-secondary);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .btn-app-refresh:active {
+      transform: rotate(180deg) scale(0.92);
+      background-color: var(--brand-blue-soft);
+      color: var(--brand-blue);
+      border-color: var(--brand-blue);
+    }
+
   </style>
 </head>
 <body>
@@ -1584,6 +1610,13 @@
             <span class="sync-dot"></span>
             <span class="sync-text">실시간 공유 중</span>
           </span>
+          <button class="btn-app-refresh" onclick="forceUpdateApp()" title="앱 최신버전 새로고침" aria-label="앱 새로고침">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 4v6h-6"></path>
+              <path d="M1 20v-6h6"></path>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+          </button>
           <span class="brand-companions">롸 · 통 · 빛</span>
         </div>
       </div>
@@ -3090,6 +3123,28 @@
 
     let selectedAddDay = 1;
     let isSyncing = false;
+
+    
+    async function forceUpdateApp() {
+      showToast('최신 버전으로 업데이트 중...');
+      try {
+        if ('caches' in window) {
+          const keys = await caches.keys();
+          await Promise.all(keys.map(k => caches.delete(k)));
+        }
+        if ('serviceWorker' in navigator) {
+          const regs = await navigator.serviceWorker.getRegistrations();
+          for (const reg of regs) {
+            await reg.unregister();
+          }
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+      const url = new URL(window.location.href);
+      url.searchParams.set('v', Date.now());
+      window.location.replace(url.toString());
+    }
 
     function setSyncBadge(status, text) {
       const badge = document.getElementById('syncStatusBadge');
