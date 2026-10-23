@@ -771,12 +771,13 @@
     }
 
     .section-main-heading {
-      font-size: 21px;
+      font-size: 19px;
       font-weight: 800;
       color: var(--text-primary);
-      letter-spacing: -0.03em;
+      letter-spacing: -0.035em;
       line-height: 1.35;
       margin-bottom: 4px;
+      white-space: nowrap;
     }
 
     .section-sub-desc {
@@ -1593,7 +1594,7 @@
       <div class="info-content-panel" id="paneReservation">
         <div class="info-native-card">
           <div class="section-eyebrow-text">2박 3일 베이스캠프</div>
-          <div class="section-main-heading">더 로얄 파크 캔버스<br/>후쿠오카 나카스</div>
+          <div class="section-main-heading">더 로얄 파크 캔버스 후쿠오카 나카스</div>
           <div class="section-sub-desc">나카스카와바타역 3번 출구</div>
 
           <div class="kv-meta-stack">
@@ -2251,7 +2252,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=8').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=9').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
