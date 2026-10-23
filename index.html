@@ -1520,48 +1520,6 @@
           <button class="quick-add-submit-btn" onclick="submitQuickItinerary()">추가</button>
         </div>
       </div>
-
-          <!-- 날짜 선택 -->
-          <div class="form-group">
-            <label class="form-label">추가할 날짜</label>
-            <div class="form-chip-row" id="addDayPicker">
-              <button type="button" class="form-chip active" id="chipDay1" onclick="selectAddDay(1)">24일(토)</button>
-              <button type="button" class="form-chip" id="chipDay2" onclick="selectAddDay(2)">25일(일)</button>
-              <button type="button" class="form-chip" id="chipDay3" onclick="selectAddDay(3)">26일(월)</button>
-            </div>
-          </div>
-
-          <!-- 장소명 & 시간 -->
-          <div class="form-grid-2">
-            <div class="form-group">
-              <label class="form-label">장소 / 일정명 *</label>
-              <input type="text" id="inputItineraryTitle" class="form-input" placeholder="예: 다이묘 소프트크림">
-            </div>
-            <div class="form-group">
-              <label class="form-label">시간 또는 시간대</label>
-              <input type="text" id="inputItineraryTime" class="form-input" placeholder="예: 15:30 또는 오후 간식">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">카테고리</label>
-            <input type="text" id="inputItineraryCategory" class="form-input" placeholder="예: 카페·디저트, 맛집, 쇼핑">
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">메모 (선택)</label>
-            <textarea id="inputItineraryDesc" class="form-textarea" rows="2" placeholder="예: 말차 아이스크림 인기. 포장해서 텐진 공원 산책"></textarea>
-          </div>
-
-          <input type="hidden" id="inputItineraryLat">
-          <input type="hidden" id="inputItineraryLng">
-
-          <div class="form-actions-row">
-            <button type="button" class="btn-form-cancel" onclick="toggleAddForm('itinerary')">취소</button>
-            <button type="button" class="btn-form-submit" onclick="submitNewItinerary()">일정에 추가 및 공유</button>
-          </div>
-        </div>
-      </div>
     </main>
 
     <!-- =====================================================
@@ -2080,23 +2038,6 @@
             </div>
             <input type="text" id="quickShoppingInput" class="quick-add-input" placeholder="사고 싶은 물건이나 매장 입력..." onkeydown="if(event.key==='Enter') submitQuickShopping()">
             <button class="quick-add-submit-btn" onclick="submitQuickShopping()">담기</button>
-          </div>
-        </div>
-
-            <div class="form-group">
-              <label class="form-label">메모 / 쇼핑 팁</label>
-              <input type="text" id="inputShoppingDetail" class="form-input" placeholder="예: 면세 5,500엔 이상 시 여권 필수">
-            </div>
-
-            <div class="form-group">
-              <label class="form-label">구글맵 링크 또는 검색어 (선택)</label>
-              <input type="text" id="inputShoppingMapUrl" class="form-input" placeholder="구글맵 링크나 검색어">
-            </div>
-
-            <div class="form-actions-row">
-              <button type="button" class="btn-form-cancel" onclick="toggleAddForm('shopping')">취소</button>
-              <button type="button" class="btn-form-submit" onclick="submitNewShopping()">쇼핑에 추가 및 공유</button>
-            </div>
           </div>
         </div>
       </div>
