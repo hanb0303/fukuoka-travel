@@ -1109,13 +1109,15 @@
       flex-shrink: 0;
     }
 
-    .mall-acc-actions-sep {
+    .mall-acc-actions-sep { display: none !important;
+
       width: 1px;
       height: 14px;
       background-color: var(--divider-color);
     }
 
-    .mall-acc-chevron {
+    .mall-acc-chevron { display: none !important;
+
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1529,9 +1531,9 @@
     ========================================================= -->
     <section class="view-container" id="viewInfo">
       <div class="info-chip-group">
-        <button class="chip-btn active" id="subBtnShopping" onclick="switchInfoPane('shopping')">🛍️ 쇼핑 리스트</button>
-        <button class="chip-btn" id="subBtnFlight" onclick="switchInfoPane('flight')">✈️ 항공권</button>
-        <button class="chip-btn" id="subBtnReservation" onclick="switchInfoPane('reservation')">숙소 · 식당 예약</button>
+        <button class="chip-btn active" id="subBtnShopping" onclick="switchInfoPane('shopping')">쇼핑 리스트</button>
+        <button class="chip-btn" id="subBtnFlight" onclick="switchInfoPane('flight')">항공권</button>
+        <button class="chip-btn" id="subBtnReservation" onclick="switchInfoPane('reservation')">예약</button>
       </div>
 
       <!-- 1. 항공권 패널 -->
@@ -1665,27 +1667,6 @@
       <!-- 3. 쇼핑 리스트 패널 (접이식 아코디언 UI) -->
       <div class="info-content-panel active" id="paneShopping">
         <div class="mall-accordion-list">
-          <!-- 6) 동행자 직접 추가 쇼핑 위시리스트 -->
-          <div class="mall-acc-item active" id="accCustomShopping" style="border-color: rgba(49, 130, 246, 0.45);">
-            <div class="mall-acc-header" onclick="toggleMallAccordion('accCustomShopping')">
-              <div class="mall-acc-title-wrap">
-                <span class="mall-acc-day-tag" style="background:#E8F3FF; color:#1B64DA;">롸·통·빛 실시간 공유 리스트</span>
-                <div class="mall-acc-name">직접 추가한 쇼핑 위시리스트 (<span id="customShoppingCount">0</span>)</div>
-              </div>
-              <div class="mall-acc-actions">
-                <div class="mall-acc-chevron">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="mall-acc-body" id="customShoppingContainer">
-              <div class="custom-shop-empty-msg">아직 추가된 쇼핑 아이템이 없어요.<br>아래 한 줄 입력창에 사고 싶은 물건이나 매장을 적어 담아보세요!</div>
-            </div>
-          </div>
-
-
           <!-- 1) 캐널시티 & 알펜 후쿠오카 -->
           <div class="mall-acc-item active" id="accCanal">
             <div class="mall-acc-header" onclick="toggleMallAccordion('accCanal')">
@@ -1699,12 +1680,8 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
-                <div class="mall-acc-actions-sep"></div>
-                <div class="mall-acc-chevron">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </div>
+                
+                
               </div>
             </div>
             <div class="mall-acc-body">
@@ -1773,12 +1750,8 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
-                <div class="mall-acc-actions-sep"></div>
-                <div class="mall-acc-chevron">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </div>
+                
+                
               </div>
             </div>
             <div class="mall-acc-body">
@@ -1830,12 +1803,8 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
-                <div class="mall-acc-actions-sep"></div>
-                <div class="mall-acc-chevron">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </div>
+                
+                
               </div>
             </div>
             <div class="mall-acc-body">
@@ -1893,12 +1862,8 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
-                <div class="mall-acc-actions-sep"></div>
-                <div class="mall-acc-chevron">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </div>
+                
+                
               </div>
             </div>
             <div class="mall-acc-body">
@@ -1978,12 +1943,8 @@
                     <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                   </svg>
                 </a>
-                <div class="mall-acc-actions-sep"></div>
-                <div class="mall-acc-chevron">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </div>
+                
+                
               </div>
             </div>
             <div class="mall-acc-body">
@@ -2028,6 +1989,21 @@
 
         
           
+                  <!-- 6) 동행자 직접 추가 쇼핑 위시리스트 -->
+          <div class="mall-acc-item active" id="accCustomShopping" style="border-color: rgba(49, 130, 246, 0.45);">
+            <div class="mall-acc-header" onclick="toggleMallAccordion('accCustomShopping')">
+              <div class="mall-acc-title-wrap">
+                <span class="mall-acc-day-tag" style="background:#E8F3FF; color:#1B64DA;">롸·통·빛 실시간 공유 리스트</span>
+                <div class="mall-acc-name">직접 추가한 쇼핑 위시리스트 (<span id="customShoppingCount">0</span>)</div>
+              </div>
+              <div class="mall-acc-actions">
+                
+              </div>
+            </div>
+            <div class="mall-acc-body" id="customShoppingContainer">
+              <div class="custom-shop-empty-msg">아직 추가된 쇼핑 아이템이 없어요.<br>아래 한 줄 입력창에 사고 싶은 물건이나 매장을 적어 담아보세요!</div>
+            </div>
+          </div>
         </div>
 
         <!-- 쇼핑 원라인 퀵 추가 바 -->
@@ -2275,7 +2251,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=6').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=7').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
