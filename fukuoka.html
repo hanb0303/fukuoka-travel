@@ -1324,6 +1324,45 @@
     /* =========================================================
        원라인 퀵 인풋 (카톡 / 할일 메모 스타일 초간편 추가)
     ========================================================= */
+    /* 쇼핑몰 선택 칩 바 */
+    .quick-shop-mall-picker {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 4px 8px;
+    }
+    .quick-shop-mall-picker::-webkit-scrollbar {
+      display: none;
+    }
+    .mall-pick-chip {
+      flex-shrink: 0;
+      appearance: none;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: var(--surface);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+      touch-action: manipulation;
+    }
+    .mall-pick-chip.active {
+      background: var(--text-primary);
+      color: #FFFFFF;
+      border-color: var(--text-primary);
+    }
+    .mall-custom-box {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
     .quick-add-bar-wrap {
       margin-top: 14px;
       margin-bottom: 24px;
@@ -1735,6 +1774,7 @@
                   </div>
                 </div>
               </div>
+              <div class="mall-custom-box" id="customList-accCanal"></div>
             </div>
           </div>
 
@@ -1788,6 +1828,7 @@
                   </div>
                 </div>
               </div>
+              <div class="mall-custom-box" id="customList-accOneBldg"></div>
             </div>
           </div>
 
@@ -1847,6 +1888,7 @@
                   </div>
                 </div>
               </div>
+              <div class="mall-custom-box" id="customList-accMina"></div>
             </div>
           </div>
 
@@ -1928,6 +1970,7 @@
                   </div>
                 </div>
               </div>
+              <div class="mall-custom-box" id="customList-accDaimyo"></div>
             </div>
           </div>
 
@@ -1985,6 +2028,7 @@
                   </div>
                 </div>
               </div>
+              <div class="mall-custom-box" id="customList-accNakasu"></div>
             </div>
           </div>
 
@@ -2009,6 +2053,14 @@
 
         <!-- 쇼핑 원라인 퀵 추가 바 -->
         <div class="quick-add-bar-wrap" id="shoppingQuickAddSection">
+          <div class="quick-shop-mall-picker" id="quickShopMallPicker">
+            <button type="button" class="mall-pick-chip active" data-mall="accCanal" onclick="selectQuickMall('accCanal')">캐널시티</button>
+            <button type="button" class="mall-pick-chip" data-mall="accOneBldg" onclick="selectQuickMall('accOneBldg')">원빌딩</button>
+            <button type="button" class="mall-pick-chip" data-mall="accMina" onclick="selectQuickMall('accMina')">미나텐진</button>
+            <button type="button" class="mall-pick-chip" data-mall="accDaimyo" onclick="selectQuickMall('accDaimyo')">다이묘</button>
+            <button type="button" class="mall-pick-chip" data-mall="accNakasu" onclick="selectQuickMall('accNakasu')">리버레인</button>
+            <button type="button" class="mall-pick-chip" data-mall="accCustomShopping" onclick="selectQuickMall('accCustomShopping')">직접추가</button>
+          </div>
           <div class="quick-add-bar">
             <div class="quick-add-icon">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
@@ -2272,7 +2324,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=10').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=11').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
@@ -2750,14 +2802,17 @@
     function toggleMallAccordion(accId) {
       const target = document.getElementById(accId);
       if (!target) return;
-      const isAlreadyActive = target.classList.contains('active');
+      const isOpen = target.classList.contains('active');
 
       document.querySelectorAll('.mall-acc-item').forEach(item => {
         item.classList.remove('active');
       });
 
-      if (!isAlreadyActive) {
+      if (!isOpen) {
         target.classList.add('active');
+        if (typeof selectQuickMall === 'function') {
+          selectQuickMall(accId, false);
+        }
       }
     }
 
@@ -3096,6 +3151,44 @@
       renderDayList(currentDay);
     }
 
+    let selectedQuickMall = 'accCanal';
+
+    function selectQuickMall(mallId, expandMall = true) {
+      selectedQuickMall = mallId;
+      const mallChips = document.querySelectorAll('.mall-pick-chip');
+      mallChips.forEach(chip => {
+        chip.classList.toggle('active', chip.dataset.mall === mallId);
+      });
+
+      const mallNames = {
+        accCanal: '캐널시티',
+        accOneBldg: '원빌딩',
+        accMina: '미나텐진',
+        accDaimyo: '다이묘',
+        accNakasu: '리버레인',
+        accCustomShopping: '직접추가'
+      };
+
+      const input = document.getElementById('quickShoppingInput');
+      if (input) {
+        const targetName = mallNames[mallId] || '쇼핑';
+        input.placeholder = `${targetName}에 담을 물건이나 매장 입력`;
+      }
+
+      if (expandMall) {
+        const targetEl = document.getElementById(mallId);
+        if (targetEl) {
+          document.querySelectorAll('.mall-acc-item').forEach(m => {
+            if (m.id !== 'accCustomShopping') {
+              m.classList.remove('active');
+            }
+          });
+          targetEl.classList.add('active');
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+      }
+    }
+
     function submitQuickShopping() {
       const input = document.getElementById('quickShoppingInput');
       if (!input) return;
@@ -3104,24 +3197,22 @@
 
       const newItem = {
         id: 'cust-s-' + Date.now(),
-        mall: '위시',
-        floor: '위시',
+        mallId: selectedQuickMall || 'accCanal',
         name: rawVal,
-        detail: '',
-        query: rawVal,
         isCustom: true,
         createdAt: Date.now()
       };
 
       sharedData.shopping_custom.push(newItem);
-      saveCloudData('쇼핑 위시리스트에 담았어요');
+      saveCloudData('쇼핑 아이템을 담았어요');
 
       input.value = '';
       renderCustomShoppingList();
-      const customAcc = document.getElementById('accCustomShopping');
-      if (customAcc) {
-        customAcc.classList.add('active');
-        customAcc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      const targetAcc = document.getElementById(selectedQuickMall);
+      if (targetAcc) {
+        targetAcc.classList.add('active');
+        targetAcc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
 
@@ -3135,58 +3226,52 @@
     }
 
     function renderCustomShoppingList() {
-      const container = document.getElementById('customShoppingContainer');
+      const mallKeys = ['accCanal', 'accOneBldg', 'accMina', 'accDaimyo', 'accNakasu'];
+      mallKeys.forEach(key => {
+        const box = document.getElementById(`customList-${key}`);
+        if (box) box.innerHTML = '';
+      });
+
+      const customContainer = document.getElementById('customShoppingContainer');
       const countEl = document.getElementById('customShoppingCount');
-      if (!container) return;
+      if (customContainer) customContainer.innerHTML = '';
 
       const items = sharedData.shopping_custom || [];
       if (countEl) countEl.textContent = items.length;
 
-      if (items.length === 0) {
-        container.innerHTML = '<div class="custom-shop-empty-msg">아직 추가된 쇼핑 아이템이 없어요.<br>아래 버튼을 눌러 함께 살 물건이나 매장을 추가해보세요!</div>';
-        return;
-      }
+      let directItemsCount = 0;
 
-      let html = '<div class="mall-floor-rows" style="margin-top: 10px;">';
       items.forEach(item => {
         const safeName = escapeHtml(item.name);
-        const safeMall = escapeHtml(item.mall);
-        const safeFloor = escapeHtml(item.floor || '위시');
-        const safeDetail = escapeHtml(item.detail || '');
-        const mapUrl = item.query ? (item.query.startsWith('http') ? item.query : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query)}`) : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' 후쿠오카')}`;
+        const targetMall = item.mallId || 'accCustomShopping';
 
-        html += `
-          <div class="mall-floor-row" style="align-items: center;">
-            <div class="floor-num-badge" style="background:#E8F3FF; color:#1B64DA; border-color:#CCE0FF;">${safeFloor}</div>
-            <div class="floor-store-content">
-              <div class="floor-store-entry">
-                <div class="floor-store-name" style="justify-content: space-between;">
-                  <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
-                    <span style="font-weight: 800;">${safeName}</span>
-                    <span class="bldg-label" style="background:#F2F4F6;">${safeMall}</span>
-                  </div>
-                  <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
-                    <a class="store-map-link" href="${mapUrl}" target="_blank" rel="noopener" title="구글 지도 열기" onclick="event.stopPropagation()">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
-                      </svg>
-                    </a>
-                    <button class="btn-item-delete" onclick="deleteShoppingItem('${item.id}', event)" title="삭제">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                ${safeDetail ? `<div class="floor-store-detail">${safeDetail}</div>` : ''}
+        const itemRow = document.createElement('div');
+        itemRow.className = 'mall-floor-row added-item-row';
+        itemRow.style.cssText = 'align-items: center; border-top: 1px dashed rgba(49, 130, 246, 0.25); padding: 8px 0; margin-top: 4px;';
+        itemRow.innerHTML = `
+          <div class="floor-num-badge" style="background:#E8F3FF; color:#1B64DA; font-weight:800; font-size:11px; padding:2px 7px; border-radius:6px;">추가</div>
+          <div class="floor-store-content" style="flex:1;">
+            <div class="floor-store-entry">
+              <div class="floor-store-name" style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:14.5px; font-weight:700; color:var(--text-primary);">${safeName}</span>
+                <button type="button" class="btn-item-delete" onclick="deleteShoppingItem('${item.id}', event)" title="삭제" style="color:#8B95A1; font-size:14px; border:none; background:none; cursor:pointer; padding:2px 6px;">✕</button>
               </div>
             </div>
           </div>
         `;
+
+        if (mallKeys.includes(targetMall)) {
+          const box = document.getElementById(`customList-${targetMall}`);
+          if (box) box.appendChild(itemRow);
+        } else {
+          directItemsCount++;
+          if (customContainer) customContainer.appendChild(itemRow);
+        }
       });
-      html += '</div>';
-      container.innerHTML = html;
+
+      if (customContainer && directItemsCount === 0) {
+        customContainer.innerHTML = '<div class="custom-shop-empty-msg">아직 직접 추가된 쇼핑 아이템이 없어요.<br>아래 한 줄 입력창에 사고 싶은 물건이나 매장을 적어 담아보세요</div>';
+      }
     }
 
     window.addEventListener('DOMContentLoaded', () => {
