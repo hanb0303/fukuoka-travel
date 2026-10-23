@@ -126,14 +126,80 @@
       color: var(--text-tertiary);
     }
 
-    .brand-companions {
-      font-size: 12px;
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sync-indicator-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11.5px;
       font-weight: 700;
       color: var(--text-secondary);
       background-color: var(--surface);
       border: 1px solid var(--divider-color);
-      padding: 4px 10px;
+      padding: 4px 8px;
       border-radius: var(--radius-pill);
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: all 0.15s ease;
+    }
+
+    .sync-indicator-pill:active {
+      transform: scale(0.95);
+      background-color: #F1F3F5;
+    }
+
+    .sync-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background-color: #2AC170;
+      box-shadow: 0 0 0 2px rgba(42, 193, 112, 0.2);
+      flex-shrink: 0;
+      transition: background-color 0.2s ease;
+    }
+
+    .sync-indicator-pill.saving .sync-dot {
+      background-color: var(--brand-blue);
+      animation: syncPulse 0.8s infinite alternate;
+    }
+
+    .sync-indicator-pill.offline .sync-dot {
+      background-color: #FF9F0A;
+      box-shadow: 0 0 0 2px rgba(255, 159, 10, 0.2);
+    }
+
+    @keyframes syncPulse {
+      from { transform: scale(0.85); opacity: 0.6; }
+      to { transform: scale(1.25); opacity: 1; }
+    }
+
+    .topbar-btn {
+      appearance: none;
+      border: 1px solid var(--divider-color);
+      background-color: var(--surface);
+      color: var(--text-secondary);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .topbar-btn:active {
+      transform: scale(0.92);
+      background-color: #F1F3F5;
+      color: var(--brand-blue);
     }
 
     /* 슬라이딩 세그먼트 컨트롤 */
@@ -1516,7 +1582,24 @@
           <span class="brand-title">후쿠오카</span>
           <span class="brand-dates">10.24(토) – 26(월)</span>
         </div>
-        <span class="brand-companions">롸 · 통 · 빛</span>
+        <div class="topbar-actions">
+          <div class="sync-indicator-pill" id="syncStatusBadge" title="동행자 실시간 연동 (탭하여 즉시 확인)" onclick="fetchCloudData(true)">
+            <span class="sync-dot"></span>
+            <span class="sync-text">롸·통·빛 연동</span>
+          </div>
+          <button class="topbar-btn" onclick="copyCompanionShareLink()" title="동행자 카톡 공유 링크 복사" aria-label="공유 링크">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+          </button>
+          <button class="topbar-btn" onclick="fetchCloudData(true)" title="지금 동기화 새로고침" aria-label="새로고침">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+            </svg>
+          </button>
+        </div>
       </div>
 
       <!-- 세그먼트 탭 -->
@@ -2324,7 +2407,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=12').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=13').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
@@ -2922,8 +3005,9 @@
       }, { passive: true });
     }
 
-    const SHARED_CLOUD_ENDPOINT = 'https://api.restful-api.dev/objects/ff808181a09d98f701a16672b1506195';
     const SHARED_STORAGE_KEY = 'fukuoka_shared_data_v2';
+    const NTFY_TOPIC = 'fukuoka_trip_2026_hanbit_sync';
+    const NTFY_ENDPOINT = 'https://ntfy.sh/' + NTFY_TOPIC;
 
     let sharedData = {
       itinerary_custom: [],
@@ -2934,8 +3018,8 @@
 
     let selectedAddDay = 1;
     let isSyncing = false;
+    let sseInstance = null;
 
-    
     async function forceUpdateApp() {
       showToast('최신 버전으로 업데이트 중');
       try {
@@ -2961,20 +3045,36 @@
       const badge = document.getElementById('syncStatusBadge');
       if (!badge) return;
       const textEl = badge.querySelector('.sync-text');
-      badge.classList.remove('saving');
+      badge.classList.remove('saving', 'offline');
 
       if (status === 'saving') {
         badge.classList.add('saving');
-        if (textEl) textEl.textContent = text || '동기화 중';
+        if (textEl) textEl.textContent = text || '동기화 중...';
       } else if (status === 'done') {
         if (textEl) textEl.textContent = text || '공유 완료';
         setTimeout(() => {
-          if (textEl) textEl.textContent = '실시간 공유 중';
+          if (textEl) textEl.textContent = '롸·통·빛 연동';
           badge.classList.remove('saving');
         }, 2200);
+      } else if (status === 'offline') {
+        badge.classList.add('offline');
+        if (textEl) textEl.textContent = text || '로컬 모드';
       } else {
-        if (textEl) textEl.textContent = text || '실시간 공유 중';
+        if (textEl) textEl.textContent = text || '롸·통·빛 연동';
       }
+    }
+
+    function applyCloudData(cloudData) {
+      if (!cloudData || typeof cloudData !== 'object') return;
+      sharedData = {
+        itinerary_custom: Array.isArray(cloudData.itinerary_custom) ? cloudData.itinerary_custom : [],
+        shopping_custom: Array.isArray(cloudData.shopping_custom) ? cloudData.shopping_custom : [],
+        deleted_ids: Array.isArray(cloudData.deleted_ids) ? cloudData.deleted_ids : [],
+        updatedAt: cloudData.updatedAt || Date.now()
+      };
+      localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify(sharedData));
+      renderDayList(currentDay);
+      renderCustomShoppingList();
     }
 
     function loadSharedData() {
@@ -2989,63 +3089,153 @@
       } catch (e) {
         console.warn('로컬 공유 데이터 로드 실패:', e);
       }
+      checkShareUrlParam();
       fetchCloudData();
+      initRealtimeSync();
     }
 
     async function fetchCloudData(isManual = false) {
       if (isSyncing && !isManual) return;
       try {
-        if (isManual) setSyncBadge('saving', '새로고침 중');
-        const res = await fetch(SHARED_CLOUD_ENDPOINT);
+        if (isManual) setSyncBadge('saving', '동기화 확인 중...');
+        const res = await fetch(NTFY_ENDPOINT + '/json?poll=1');
         if (!res.ok) throw new Error('서버 응답 오류: ' + res.status);
-        const json = await res.json();
-        if (json && json.data) {
-          const cloudData = json.data;
-          // 클라우드 데이터가 더 최신이거나 수동 요청 시 적용
-          if (isManual || (cloudData.updatedAt && cloudData.updatedAt > (sharedData.updatedAt || 0))) {
-            sharedData = {
-              itinerary_custom: Array.isArray(cloudData.itinerary_custom) ? cloudData.itinerary_custom : [],
-              shopping_custom: Array.isArray(cloudData.shopping_custom) ? cloudData.shopping_custom : [],
-              deleted_ids: Array.isArray(cloudData.deleted_ids) ? cloudData.deleted_ids : [],
-              updatedAt: cloudData.updatedAt || Date.now()
-            };
-            localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify(sharedData));
-            renderDayList(currentDay);
-            renderCustomShoppingList();
-            if (isManual) showToast('최신 일정 및 쇼핑을 동기화했어요');
+        const text = await res.text();
+        const lines = text.trim().split('\n').filter(Boolean);
+        if (lines.length > 0) {
+          for (let i = lines.length - 1; i >= 0; i--) {
+            try {
+              const item = JSON.parse(lines[i]);
+              if (item.event === 'message' && item.message) {
+                const parsed = JSON.parse(item.message);
+                if (parsed && parsed.data && parsed.updatedAt) {
+                  if (isManual || parsed.updatedAt > (sharedData.updatedAt || 0)) {
+                    applyCloudData(parsed.data);
+                    if (isManual) showToast('최신 일정 및 쇼핑을 동기화했어요');
+                  }
+                  break;
+                }
+              }
+            } catch (err) {}
           }
         }
-        setSyncBadge('normal', '실시간 공유 중');
+        setSyncBadge('normal', '롸·통·빛 연동');
       } catch (e) {
         console.warn('클라우드 동기화 실패:', e);
         if (isManual) showToast('오프라인 상태입니다. 로컬 데이터로 표시됩니다.');
+        setSyncBadge('offline', '로컬 모드');
       }
     }
 
     async function saveCloudData(successToastMsg) {
       sharedData.updatedAt = Date.now();
       localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify(sharedData));
-      setSyncBadge('saving', '공유 저장 중');
+      setSyncBadge('saving', '공유 중...');
       isSyncing = true;
 
       try {
-        const res = await fetch(SHARED_CLOUD_ENDPOINT, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: 'fukuoka_travel_shared_data',
-            data: sharedData
-          })
+        const payload = {
+          type: 'SYNC_UPDATE',
+          updatedAt: sharedData.updatedAt,
+          data: sharedData
+        };
+        const res = await fetch(NTFY_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Title': '후쿠오카 여행 데이터 동기화',
+            'Priority': 'low',
+            'Tags': 'fukuoka,sync'
+          },
+          body: JSON.stringify(payload)
         });
-        if (!res.ok) throw new Error('저장 실패: ' + res.status);
-        setSyncBadge('done', '✓ 동행자 공유 완료');
+        if (!res.ok) throw new Error('저장 응답 오류: ' + res.status);
+        setSyncBadge('done', '✓ 동행자 연동 완료');
         if (successToastMsg) showToast(successToastMsg);
       } catch (e) {
         console.warn('클라우드 저장 실패:', e);
-        setSyncBadge('normal', '로컬 저장됨');
+        setSyncBadge('normal', '로컬 보관됨');
         showToast('로컬에 저장되었으며, 연결 시 자동 공유됩니다.');
       } finally {
         isSyncing = false;
+      }
+    }
+
+    function initRealtimeSync() {
+      try {
+        if (!window.EventSource) return;
+        if (sseInstance) {
+          try { sseInstance.close(); } catch(e) {}
+        }
+        sseInstance = new EventSource(NTFY_ENDPOINT + '/sse');
+        sseInstance.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.event === 'message' && data.message) {
+              const parsed = JSON.parse(data.message);
+              if (parsed && parsed.data && parsed.updatedAt > (sharedData.updatedAt || 0)) {
+                applyCloudData(parsed.data);
+                setSyncBadge('done', '새 데이터 반영됨');
+              }
+            }
+          } catch (e) {
+            console.warn('실시간 데이터 처리 예외:', e);
+          }
+        };
+        sseInstance.onerror = () => {
+          // SSE 자동 재연결 유지
+        };
+      } catch (e) {
+        console.warn('SSE 연결 초기화 실패:', e);
+      }
+    }
+
+    function copyCompanionShareLink() {
+      try {
+        const payload = {
+          itinerary_custom: sharedData.itinerary_custom || [],
+          shopping_custom: sharedData.shopping_custom || [],
+          deleted_ids: sharedData.deleted_ids || [],
+          updatedAt: sharedData.updatedAt || Date.now()
+        };
+        const jsonStr = JSON.stringify(payload);
+        const encoded = btoa(encodeURIComponent(jsonStr));
+        const url = new URL(window.location.href);
+        url.searchParams.delete('v');
+        url.searchParams.set('share', encoded);
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url.toString()).then(() => {
+            showToast('동행자 공유 링크 복사 완료! 카톡에 붙여넣으세요');
+          }).catch(() => {
+            prompt('아래 링크를 복사해 동행자에게 공유하세요:', url.toString());
+          });
+        } else {
+          prompt('아래 링크를 복사해 동행자에게 공유하세요:', url.toString());
+        }
+      } catch (e) {
+        console.error('공유 링크 생성 실패:', e);
+        showToast('공유 링크 생성 실패');
+      }
+    }
+
+    function checkShareUrlParam() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const shareData = params.get('share');
+        if (shareData) {
+          const decodedJson = decodeURIComponent(atob(shareData));
+          const parsed = JSON.parse(decodedJson);
+          if (parsed && (Array.isArray(parsed.itinerary_custom) || Array.isArray(parsed.shopping_custom))) {
+            if (confirm('롸·통·빛의 공유 일정 및 쇼핑 리스트를 발견했습니다!\n내 앱에 동기화할까요?')) {
+              applyCloudData(parsed);
+              saveCloudData('동행자 데이터가 성공적으로 반영되었습니다');
+              const cleanUrl = window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('공유 링크 파싱 예외:', e);
       }
     }
 
@@ -3278,8 +3468,7 @@
       renderCustomShoppingList();
       initSwipeGesture();
 
-      // 주기적 백그라운드 동기화 (25초 간격) 및 탭 포커스 시 즉시 동기화
-      setInterval(() => fetchCloudData(false), 25000);
+      // 화면 복귀 및 탭 포커스 시 최신 데이터 동기화
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') fetchCloudData(false);
       });

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fukuoka-v12';
+const CACHE_NAME = 'fukuoka-v13';
 const ASSETS = [
   './manifest.json',
   './sortable.min.js',
