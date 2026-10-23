@@ -1520,7 +1520,7 @@
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
           </div>
-          <input type="text" id="quickItineraryInput" class="quick-add-input" placeholder="구글맵 링크나 장소명 입력..." onkeydown="if(event.key==='Enter') submitQuickItinerary()">
+          <input type="text" id="quickItineraryInput" class="quick-add-input" placeholder="구글맵 링크나 장소명 입력" onkeydown="if(event.key==='Enter') submitQuickItinerary()">
           <button class="quick-add-submit-btn" onclick="submitQuickItinerary()">추가</button>
         </div>
       </div>
@@ -2016,7 +2016,7 @@
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
               </svg>
             </div>
-            <input type="text" id="quickShoppingInput" class="quick-add-input" placeholder="사고 싶은 물건이나 매장 입력..." onkeydown="if(event.key==='Enter') submitQuickShopping()">
+            <input type="text" id="quickShoppingInput" class="quick-add-input" placeholder="사고 싶은 물건이나 매장 입력" onkeydown="if(event.key==='Enter') submitQuickShopping()">
             <button class="quick-add-submit-btn" onclick="submitQuickShopping()">담기</button>
           </div>
         </div>
@@ -2251,7 +2251,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=7').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=8').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
@@ -2867,7 +2867,7 @@
 
     
     async function forceUpdateApp() {
-      showToast('최신 버전으로 업데이트 중...');
+      showToast('최신 버전으로 업데이트 중');
       try {
         if ('caches' in window) {
           const keys = await caches.keys();
@@ -2895,7 +2895,7 @@
 
       if (status === 'saving') {
         badge.classList.add('saving');
-        if (textEl) textEl.textContent = text || '동기화 중...';
+        if (textEl) textEl.textContent = text || '동기화 중';
       } else if (status === 'done') {
         if (textEl) textEl.textContent = text || '공유 완료';
         setTimeout(() => {
@@ -2925,7 +2925,7 @@
     async function fetchCloudData(isManual = false) {
       if (isSyncing && !isManual) return;
       try {
-        if (isManual) setSyncBadge('saving', '새로고침 중...');
+        if (isManual) setSyncBadge('saving', '새로고침 중');
         const res = await fetch(SHARED_CLOUD_ENDPOINT);
         if (!res.ok) throw new Error('서버 응답 오류: ' + res.status);
         const json = await res.json();
@@ -2955,7 +2955,7 @@
     async function saveCloudData(successToastMsg) {
       sharedData.updatedAt = Date.now();
       localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify(sharedData));
-      setSyncBadge('saving', '공유 저장 중...');
+      setSyncBadge('saving', '공유 저장 중');
       isSyncing = true;
 
       try {
