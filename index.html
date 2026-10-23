@@ -1708,7 +1708,7 @@
       <div class="info-content-panel active" id="paneShopping">
         <div class="mall-accordion-list">
           <!-- 1) 캐널시티 & 알펜 후쿠오카 -->
-          <div class="mall-acc-item active" id="accCanal">
+          <div class="mall-acc-item" id="accCanal">
             <div class="mall-acc-header" onclick="toggleMallAccordion('accCanal')">
               <div class="mall-acc-title-wrap">
                 <span class="mall-acc-day-tag">토요일 코스 · 러닝화 집중</span>
@@ -2035,7 +2035,7 @@
         
           
                   <!-- 6) 동행자 직접 추가 쇼핑 위시리스트 -->
-          <div class="mall-acc-item active" id="accCustomShopping" style="border-color: rgba(49, 130, 246, 0.45);">
+          <div class="mall-acc-item" id="accCustomShopping" style="border-color: rgba(49, 130, 246, 0.45);">
             <div class="mall-acc-header" onclick="toggleMallAccordion('accCustomShopping')">
               <div class="mall-acc-title-wrap">
                 <span class="mall-acc-day-tag" style="background:#E8F3FF; color:#1B64DA;">롸·통·빛 실시간 공유 리스트</span>
@@ -2324,7 +2324,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=11').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=12').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
@@ -2816,21 +2816,15 @@
       }
     }
 
-    function syncShoppingAccordionByDay(dayNum) {
-      const dayMallMap = {
-        1: 'accCanal',   // 24일(토): 캐널시티 & 알펜 후쿠오카
-        2: 'accOneBldg', // 25일(일): 원 후쿠오카 빌딩 (원빌딩)
-        3: 'accNakasu'   // 26일(월): 리버레인 & 나카스 (돈키호테/숙소 인근)
-      };
-      const targetAccId = dayMallMap[dayNum] || 'accCanal';
-
+    function closeAllShoppingAccordions() {
       document.querySelectorAll('.mall-acc-item').forEach(item => {
-        if (item.id === 'accCustomShopping') {
-          item.classList.add('active'); // 실시간 공유 리스트는 상시 오픈
-        } else {
-          item.classList.toggle('active', item.id === targetAccId);
-        }
+        item.classList.remove('active');
       });
+    }
+
+    function syncShoppingAccordionByDay(dayNum) {
+      // 모든 쇼핑몰 및 위시리스트 카드를 닫힌 채로 유지
+      closeAllShoppingAccordions();
     }
 
     /* 접속 날짜(10.24 -> 1일차, 10.25 -> 2일차, 10.26 -> 3일차) 자동 판별 */
