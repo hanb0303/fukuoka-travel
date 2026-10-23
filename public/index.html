@@ -1269,6 +1269,298 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+  
+    /* =========================================================
+       실시간 공유 상태 뱃지 & 동기화 애니메이션
+    ========================================================= */
+    .sync-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand-blue);
+      background-color: var(--brand-blue-soft);
+      padding: 3px 8px;
+      border-radius: var(--radius-pill);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .sync-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--brand-blue);
+      box-shadow: 0 0 0 0 rgba(49, 130, 246, 0.5);
+      animation: pulse-dot 2s infinite;
+    }
+
+    .sync-status-badge.saving {
+      color: #E67700;
+      background-color: #FFF3E0;
+    }
+
+    .sync-status-badge.saving .sync-dot {
+      background-color: #E67700;
+      animation: none;
+    }
+
+    @keyframes pulse-dot {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(49, 130, 246, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(49, 130, 246, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(49, 130, 246, 0); }
+    }
+
+    /* =========================================================
+       직접 추가하기 토글 버튼 및 폼 카드
+    ========================================================= */
+    .custom-add-card {
+      margin-top: 14px;
+      margin-bottom: 24px;
+    }
+
+    .btn-toggle-add-form {
+      appearance: none;
+      width: 100%;
+      height: 48px;
+      background-color: var(--surface);
+      border: 1px dashed #C4C9D0;
+      border-radius: 16px;
+      color: var(--brand-blue);
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-toggle-add-form:active {
+      background-color: var(--brand-blue-soft);
+      border-color: var(--brand-blue);
+      transform: scale(0.98);
+    }
+
+    .custom-add-form {
+      background-color: var(--surface);
+      border: 1px solid var(--divider-color);
+      border-radius: 20px;
+      padding: 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+      animation: fadeInForm 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes fadeInForm {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--divider-color);
+    }
+
+    .form-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .form-sub-badge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--brand-blue);
+      background-color: var(--brand-blue-soft);
+      padding: 2px 7px;
+      border-radius: 5px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-tip {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--brand-blue);
+    }
+
+    .form-input, .form-select, .form-textarea {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      border: 1px solid #E2E6EA;
+      background-color: #F8F9FA;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 12px;
+      border-radius: 12px;
+      outline: none;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--brand-blue);
+      background-color: #FFFFFF;
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 52px;
+      line-height: 1.4;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .form-chip-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    .form-chip {
+      appearance: none;
+      flex: 1;
+      height: 36px;
+      border-radius: 10px;
+      border: 1px solid var(--divider-color);
+      background-color: #FFFFFF;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .form-chip.active {
+      border-color: var(--brand-blue);
+      background-color: var(--brand-blue);
+      color: #FFFFFF;
+    }
+
+    .url-parse-feedback {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0F9D58;
+      background-color: #E6F4EA;
+      padding: 6px 10px;
+      border-radius: 8px;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .form-actions-row {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .btn-form-cancel {
+      appearance: none;
+      height: 44px;
+      border: 1px solid var(--divider-color);
+      background-color: #ECEEF2;
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .btn-form-submit {
+      appearance: none;
+      height: 44px;
+      border: none;
+      background-color: var(--brand-blue);
+      color: #FFFFFF;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .btn-form-submit:active {
+      transform: scale(0.98);
+    }
+
+    /* 아이템 삭제 버튼 */
+    .btn-item-delete {
+      appearance: none;
+      border: none;
+      background: none;
+      color: #8B95A1;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.15s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-item-delete:hover, .btn-item-delete:active {
+      color: #E53935;
+      background-color: #FFEBEE;
+    }
+
+    .custom-item-tag {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #3182F6;
+      background-color: #E8F3FF;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .custom-shop-empty-msg {
+      padding: 16px 12px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      line-height: 1.5;
+    }
+
   </style>
 </head>
 <body>
@@ -1284,7 +1576,13 @@
           <span class="brand-title">후쿠오카</span>
           <span class="brand-dates">10.24(토) – 26(월)</span>
         </div>
-        <span class="brand-companions">롸 · 통 · 빛</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="sync-status-badge" id="syncStatusBadge" onclick="fetchCloudData(true)" title="탭하여 지금 동기화">
+            <span class="sync-dot"></span>
+            <span class="sync-text">실시간 공유 중</span>
+          </span>
+          <span class="brand-companions">롸 · 통 · 빛</span>
+        </div>
       </div>
 
       <!-- 세그먼트 탭 -->
@@ -1317,6 +1615,74 @@
 
       <div class="itinerary-group-card" id="blocksContainer">
         <!-- JS 렌더링 -->
+      </div>
+
+      <!-- 일정 직접 추가하기 섹션 -->
+      <div class="custom-add-card" id="itineraryAddSection">
+        <button class="btn-toggle-add-form" id="btnToggleItineraryForm" onclick="toggleAddForm('itinerary')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>새 일정 직접 추가하기</span>
+        </button>
+
+        <div class="custom-add-form" id="itineraryAddForm" style="display: none;">
+          <div class="form-header-row">
+            <span class="form-title">새 일정 추가</span>
+            <span class="form-sub-badge">롸·통·빛 실시간 공유</span>
+          </div>
+
+          <!-- 구글맵 주소 입력창 (핵심 기능) -->
+          <div class="form-group">
+            <label class="form-label">
+              <span>구글 지도 링크 / 주소</span>
+              <span class="form-tip">붙여넣으면 이름·좌표 자동 입력</span>
+            </label>
+            <input type="text" id="inputItineraryMapUrl" class="form-input" placeholder="구글맵 링크나 주소를 붙여넣어 보세요" oninput="handleMapUrlInput(this.value)">
+            <div class="url-parse-feedback" id="urlParseFeedback" style="display: none;"></div>
+          </div>
+
+          <!-- 날짜 선택 -->
+          <div class="form-group">
+            <label class="form-label">추가할 날짜</label>
+            <div class="form-chip-row" id="addDayPicker">
+              <button type="button" class="form-chip active" id="chipDay1" onclick="selectAddDay(1)">24일(토)</button>
+              <button type="button" class="form-chip" id="chipDay2" onclick="selectAddDay(2)">25일(일)</button>
+              <button type="button" class="form-chip" id="chipDay3" onclick="selectAddDay(3)">26일(월)</button>
+            </div>
+          </div>
+
+          <!-- 장소명 & 시간 -->
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">장소 / 일정명 *</label>
+              <input type="text" id="inputItineraryTitle" class="form-input" placeholder="예: 다이묘 소프트크림">
+            </div>
+            <div class="form-group">
+              <label class="form-label">시간 또는 시간대</label>
+              <input type="text" id="inputItineraryTime" class="form-input" placeholder="예: 15:30 또는 오후 간식">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">카테고리</label>
+            <input type="text" id="inputItineraryCategory" class="form-input" placeholder="예: 카페·디저트, 맛집, 쇼핑">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">메모 (선택)</label>
+            <textarea id="inputItineraryDesc" class="form-textarea" rows="2" placeholder="예: 말차 아이스크림 인기. 포장해서 텐진 공원 산책"></textarea>
+          </div>
+
+          <input type="hidden" id="inputItineraryLat">
+          <input type="hidden" id="inputItineraryLng">
+
+          <div class="form-actions-row">
+            <button type="button" class="btn-form-cancel" onclick="toggleAddForm('itinerary')">취소</button>
+            <button type="button" class="btn-form-submit" onclick="submitNewItinerary()">일정에 추가 및 공유</button>
+          </div>
+        </div>
       </div>
     </main>
 
@@ -1802,8 +2168,83 @@
             </div>
           </div>
 
+        
+          <!-- 6) 동행자 직접 추가 쇼핑 위시리스트 -->
+          <div class="mall-acc-item active" id="accCustomShopping" style="border-color: rgba(49, 130, 246, 0.45);">
+            <div class="mall-acc-header" onclick="toggleMallAccordion('accCustomShopping')">
+              <div class="mall-acc-title-wrap">
+                <span class="mall-acc-day-tag" style="background:#E8F3FF; color:#1B64DA;">롸·통·빛 실시간 공유 리스트</span>
+                <div class="mall-acc-name">직접 추가한 쇼핑 위시리스트 (<span id="customShoppingCount">0</span>)</div>
+              </div>
+              <div class="mall-acc-actions">
+                <div class="mall-acc-chevron">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="mall-acc-body" id="customShoppingContainer">
+              <div class="custom-shop-empty-msg">아직 추가된 쇼핑 아이템이 없어요.<br>아래 버튼을 눌러 함께 살 물건이나 매장을 추가해보세요!</div>
+            </div>
+          </div>
         </div>
 
+        <!-- 쇼핑 아이템 직접 추가하기 섹션 -->
+        <div class="custom-add-card" id="shoppingAddSection">
+          <button class="btn-toggle-add-form" id="btnToggleShoppingForm" onclick="toggleAddForm('shopping')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>쇼핑 아이템 / 매장 직접 추가하기</span>
+          </button>
+
+          <div class="custom-add-form" id="shoppingAddForm" style="display: none;">
+            <div class="form-header-row">
+              <span class="form-title">새 쇼핑 아이템 추가</span>
+              <span class="form-sub-badge">롸·통·빛 실시간 공유</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">쇼핑 구역 / 몰</label>
+              <select id="inputShoppingMall" class="form-select">
+                <option value="캐널시티">캐널시티 & 알펜 후쿠오카</option>
+                <option value="원빌딩">원 후쿠오카 빌딩 (원빌딩)</option>
+                <option value="미나텐진">미나텐진</option>
+                <option value="다이묘">다이묘 & 텐진 스포츠 로드숍</option>
+                <option value="나카스">리버레인 & 나카스 (돈키호테)</option>
+                <option value="기타">기타 단독 매장 / 상점가</option>
+              </select>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">매장 또는 상품명 *</label>
+                <input type="text" id="inputShoppingName" class="form-input" placeholder="예: 산토리 히비키, 빔즈">
+              </div>
+              <div class="form-group">
+                <label class="form-label">층수 또는 위치</label>
+                <input type="text" id="inputShoppingFloor" class="form-input" placeholder="예: 2F 또는 로드숍">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">메모 / 쇼핑 팁</label>
+              <input type="text" id="inputShoppingDetail" class="form-input" placeholder="예: 면세 5,500엔 이상 시 여권 필수">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">구글맵 링크 또는 검색어 (선택)</label>
+              <input type="text" id="inputShoppingMapUrl" class="form-input" placeholder="구글맵 링크나 검색어">
+            </div>
+
+            <div class="form-actions-row">
+              <button type="button" class="btn-form-cancel" onclick="toggleAddForm('shopping')">취소</button>
+              <button type="button" class="btn-form-submit" onclick="submitNewShopping()">쇼핑에 추가 및 공유</button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -2111,7 +2552,10 @@
     }
 
     function renderDayList(dayNum) {
-      const blocks = ITINERARY_DATA[dayNum] || [];
+      const defaultBlocks = (ITINERARY_DATA[dayNum] || []).filter(item => !sharedData.deleted_ids.includes(item.id));
+      const customBlocks = (sharedData.itinerary_custom || []).filter(item => item.day == dayNum && !sharedData.deleted_ids.includes(item.id));
+      const blocks = [...defaultBlocks, ...customBlocks];
+
       const container = document.getElementById('blocksContainer');
       if (!container) return;
       container.innerHTML = '';
@@ -2119,7 +2563,9 @@
       blocks.forEach((item, idx) => {
         const stepNum = idx + 1;
         const isSelected = selectedBlockId === item.id;
-        const gmapAppUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query || item.title)}`;
+        const gmapAppUrl = item.query && item.query.startsWith('http')
+          ? item.query
+          : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query || item.title)}`;
 
         const itemEl = document.createElement('div');
         itemEl.className = `itinerary-item ${isSelected ? 'selected' : ''}`;
@@ -2137,6 +2583,16 @@
           timeTagHtml = `<span>${escapeHtml(item.timeBlock)}</span>`;
         }
 
+        const customTagHtml = item.isCustom ? '<span class="custom-item-tag">직접 추가</span>' : '';
+        const deleteBtnHtml = item.isCustom
+          ? `<button class="btn-item-delete" onclick="deleteItineraryItem('${item.id}', event)" title="일정 삭제" aria-label="삭제">
+               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                 <line x1="18" y1="6" x2="6" y2="18"></line>
+                 <line x1="6" y1="6" x2="18" y2="18"></line>
+               </svg>
+             </button>`
+          : '';
+
         itemEl.innerHTML = `
           <div class="item-main-row">
             <div class="item-badge-wrap">
@@ -2148,6 +2604,7 @@
                 ${timeTagHtml}
                 <span>·</span>
                 <span>${safeCat}</span>
+                ${customTagHtml}
               </div>
             </div>
             <div class="item-actions-wrap">
@@ -2156,6 +2613,7 @@
                   <polygon points="3 11 22 2 13 21 11 13 3 11"/>
                 </svg>
               </a>
+              ${deleteBtnHtml}
               <div class="item-drag-handle" title="드래그하여 순서 변경" aria-label="순서 드래그">
                 <svg width="14" height="11" viewBox="0 0 14 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M1 2H13M1 5.5H13M1 9H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
@@ -2163,15 +2621,16 @@
               </div>
             </div>
           </div>
+          ${safeDesc ? `
           <div class="item-drawer-panel">
             <div class="drawer-memo-card">${safeDesc}</div>
-          </div>
+          </div>` : ''}
         `;
 
         const row = itemEl.querySelector('.item-main-row');
         if (row) {
           row.addEventListener('click', (e) => {
-            if (e.target.closest('.item-route-icon-btn') || e.target.closest('.item-drag-handle')) return;
+            if (e.target.closest('.item-route-icon-btn') || e.target.closest('.item-drag-handle') || e.target.closest('.btn-item-delete')) return;
             onTapBlock(item.id, item.lat, item.lng);
           });
         }
@@ -2557,6 +3016,9 @@
             target.closest('.btn-native-action') ||
             target.closest('.btn-mini-copy') ||
             target.closest('.store-map-link') ||
+            target.closest('.custom-add-card') ||
+            target.closest('.btn-item-delete') ||
+            target.closest('.sync-status-badge') ||
             target.closest('.mall-acc-header')) {
           isTracking = false;
           return;
@@ -2598,13 +3060,420 @@
       }, { passive: true });
     }
 
+    
+    /* =========================================================
+       클라우드 실시간 동기화 (롸·통·빛 자동 공유)
+    ========================================================= */
+    const SHARED_CLOUD_ENDPOINT = 'https://api.restful-api.dev/objects/ff808181a09d98f701a16672b1506195';
+    const SHARED_STORAGE_KEY = 'fukuoka_shared_data_v2';
+
+    let sharedData = {
+      itinerary_custom: [],
+      shopping_custom: [],
+      deleted_ids: [],
+      updatedAt: 0
+    };
+
+    let selectedAddDay = 1;
+    let isSyncing = false;
+
+    function setSyncBadge(status, text) {
+      const badge = document.getElementById('syncStatusBadge');
+      if (!badge) return;
+      const textEl = badge.querySelector('.sync-text');
+      badge.classList.remove('saving');
+
+      if (status === 'saving') {
+        badge.classList.add('saving');
+        if (textEl) textEl.textContent = text || '동기화 중...';
+      } else if (status === 'done') {
+        if (textEl) textEl.textContent = text || '공유 완료';
+        setTimeout(() => {
+          if (textEl) textEl.textContent = '실시간 공유 중';
+          badge.classList.remove('saving');
+        }, 2200);
+      } else {
+        if (textEl) textEl.textContent = text || '실시간 공유 중';
+      }
+    }
+
+    function loadSharedData() {
+      try {
+        const local = localStorage.getItem(SHARED_STORAGE_KEY);
+        if (local) {
+          const parsed = JSON.parse(local);
+          if (parsed && typeof parsed === 'object') {
+            sharedData = Object.assign(sharedData, parsed);
+          }
+        }
+      } catch (e) {
+        console.warn('로컬 공유 데이터 로드 실패:', e);
+      }
+      fetchCloudData();
+    }
+
+    async function fetchCloudData(isManual = false) {
+      if (isSyncing && !isManual) return;
+      try {
+        if (isManual) setSyncBadge('saving', '새로고침 중...');
+        const res = await fetch(SHARED_CLOUD_ENDPOINT);
+        if (!res.ok) throw new Error('서버 응답 오류: ' + res.status);
+        const json = await res.json();
+        if (json && json.data) {
+          const cloudData = json.data;
+          // 클라우드 데이터가 더 최신이거나 수동 요청 시 적용
+          if (isManual || (cloudData.updatedAt && cloudData.updatedAt > (sharedData.updatedAt || 0))) {
+            sharedData = {
+              itinerary_custom: Array.isArray(cloudData.itinerary_custom) ? cloudData.itinerary_custom : [],
+              shopping_custom: Array.isArray(cloudData.shopping_custom) ? cloudData.shopping_custom : [],
+              deleted_ids: Array.isArray(cloudData.deleted_ids) ? cloudData.deleted_ids : [],
+              updatedAt: cloudData.updatedAt || Date.now()
+            };
+            localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify(sharedData));
+            renderDayList(currentDay);
+            renderCustomShoppingList();
+            if (isManual) showToast('최신 일정 및 쇼핑을 동기화했어요');
+          }
+        }
+        setSyncBadge('normal', '실시간 공유 중');
+      } catch (e) {
+        console.warn('클라우드 동기화 실패:', e);
+        if (isManual) showToast('오프라인 상태입니다. 로컬 데이터로 표시됩니다.');
+      }
+    }
+
+    async function saveCloudData(successToastMsg) {
+      sharedData.updatedAt = Date.now();
+      localStorage.setItem(SHARED_STORAGE_KEY, JSON.stringify(sharedData));
+      setSyncBadge('saving', '공유 저장 중...');
+      isSyncing = true;
+
+      try {
+        const res = await fetch(SHARED_CLOUD_ENDPOINT, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: 'fukuoka_travel_shared_data',
+            data: sharedData
+          })
+        });
+        if (!res.ok) throw new Error('저장 실패: ' + res.status);
+        setSyncBadge('done', '✓ 동행자 공유 완료');
+        if (successToastMsg) showToast(successToastMsg);
+      } catch (e) {
+        console.warn('클라우드 저장 실패:', e);
+        setSyncBadge('normal', '로컬 저장됨');
+        showToast('로컬에 저장되었으며, 연결 시 자동 공유됩니다.');
+      } finally {
+        isSyncing = false;
+      }
+    }
+
+    /* 구글맵 URL 또는 텍스트 자동 파싱 */
+    function parseGoogleMapsInput(input) {
+      const res = { title: '', lat: null, lng: null, query: '' };
+      if (!input) return res;
+      input = input.trim();
+
+      // 1. 위도/경도 매칭 (@lat,lng 또는 q=lat,lng 또는 좌표)
+      const coordMatch = input.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) ||
+                         input.match(/query=(-?\d+\.\d+)[,%2C]+(-?\d+\.\d+)/) ||
+                         input.match(/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/) ||
+                         input.match(/(-?\d{2}\.\d{3,8})[,\s]+(-?\d{2,3}\.\d{3,8})/);
+      if (coordMatch) {
+        res.lat = parseFloat(coordMatch[1]);
+        res.lng = parseFloat(coordMatch[2]);
+      }
+
+      // 2. 장소명 추출 (/place/장소명/...)
+      const placeMatch = input.match(/\/place\/([^/@?#]+)/);
+      if (placeMatch) {
+        try {
+          res.title = decodeURIComponent(placeMatch[1].replace(/\+/g, ' '));
+        } catch(e) {
+          res.title = placeMatch[1];
+        }
+      } else {
+        const qMatch = input.match(/[?&]query=([^&]+)/) || input.match(/[?&]q=([^&]+)/);
+        if (qMatch && !coordMatch) {
+          try {
+            res.title = decodeURIComponent(qMatch[1].replace(/\+/g, ' '));
+          } catch(e) {}
+        }
+      }
+
+      if (input.startsWith('http://') || input.startsWith('https://')) {
+        res.query = input;
+      } else if (!res.title) {
+        res.title = input;
+      }
+
+      return res;
+    }
+
+    function handleMapUrlInput(val) {
+      const feedback = document.getElementById('urlParseFeedback');
+      const titleInput = document.getElementById('inputItineraryTitle');
+      const latInput = document.getElementById('inputItineraryLat');
+      const lngInput = document.getElementById('inputItineraryLng');
+      if (!feedback) return;
+
+      if (!val || !val.trim()) {
+        feedback.style.display = 'none';
+        return;
+      }
+
+      const parsed = parseGoogleMapsInput(val);
+
+      if (parsed.title && (!titleInput.value || titleInput.dataset.autoFilled === 'true')) {
+        titleInput.value = parsed.title;
+        titleInput.dataset.autoFilled = 'true';
+      }
+
+      if (parsed.lat && parsed.lng) {
+        latInput.value = parsed.lat;
+        lngInput.value = parsed.lng;
+      }
+
+      feedback.style.display = 'flex';
+      if (parsed.title && parsed.lat) {
+        feedback.textContent = `✓ 장소명("${parsed.title}")과 지도 위치가 자동으로 인식되었습니다!`;
+      } else if (parsed.lat) {
+        feedback.textContent = '✓ 지도 좌표가 인식되었습니다. 장소 이름을 확인해 주세요.';
+      } else if (parsed.title) {
+        feedback.textContent = `✓ 장소명("${parsed.title}")이 인식되었습니다.`;
+      } else if (val.includes('maps.app.goo.gl')) {
+        feedback.textContent = '✓ 구글맵 단축링크가 연결되었습니다. 일정명을 입력해 주세요.';
+      } else {
+        feedback.textContent = '✓ 링크가 연결되었습니다.';
+      }
+    }
+
+    function toggleAddForm(type) {
+      const form = document.getElementById(type === 'itinerary' ? 'itineraryAddForm' : 'shoppingAddForm');
+      const btn = document.getElementById(type === 'itinerary' ? 'btnToggleItineraryForm' : 'btnToggleShoppingForm');
+      if (!form) return;
+      const isOpen = form.style.display !== 'none';
+      form.style.display = isOpen ? 'none' : 'flex';
+      if (btn) btn.style.display = isOpen ? 'flex' : 'none';
+
+      if (!isOpen && type === 'itinerary') {
+        selectAddDay(currentDay);
+        setTimeout(() => {
+          const mapInput = document.getElementById('inputItineraryMapUrl');
+          if (mapInput) mapInput.focus();
+        }, 100);
+      }
+    }
+
+    function selectAddDay(dayNum) {
+      selectedAddDay = dayNum;
+      [1, 2, 3].forEach(d => {
+        const chip = document.getElementById(`chipDay${d}`);
+        if (chip) chip.classList.toggle('active', d === dayNum);
+      });
+    }
+
+    function submitNewItinerary() {
+      const titleInput = document.getElementById('inputItineraryTitle');
+      const timeInput = document.getElementById('inputItineraryTime');
+      const catInput = document.getElementById('inputItineraryCategory');
+      const descInput = document.getElementById('inputItineraryDesc');
+      const mapUrlInput = document.getElementById('inputItineraryMapUrl');
+      const latInput = document.getElementById('inputItineraryLat');
+      const lngInput = document.getElementById('inputItineraryLng');
+
+      const title = (titleInput.value || '').trim();
+      if (!title) {
+        alert('장소 또는 일정명을 입력해 주세요.');
+        titleInput.focus();
+        return;
+      }
+
+      let lat = parseFloat(latInput.value);
+      let lng = parseFloat(lngInput.value);
+      // 좌표가 없으면 후쿠오카 중심가 기본 좌표 배치
+      if (isNaN(lat) || isNaN(lng)) {
+        lat = 33.5908;
+        lng = 130.4010;
+      }
+
+      const timeVal = (timeInput.value || '').trim();
+      let fixedTime = null;
+      let timeBlock = null;
+      if (/^\d{1,2}:\d{2}$/.test(timeVal)) {
+        fixedTime = timeVal;
+      } else if (timeVal) {
+        timeBlock = timeVal;
+      } else {
+        timeBlock = '추가 일정';
+      }
+
+      const newItem = {
+        id: 'cust-i-' + Date.now(),
+        day: selectedAddDay,
+        title: title,
+        category: (catInput.value || '추가 일정').trim(),
+        desc: (descInput.value || '').trim(),
+        fixedTime: fixedTime,
+        timeBlock: timeBlock,
+        lat: lat,
+        lng: lng,
+        query: (mapUrlInput.value || '').trim() || title,
+        isCustom: true,
+        createdAt: Date.now()
+      };
+
+      sharedData.itinerary_custom.push(newItem);
+      saveCloudData('새 일정을 추가하고 공유했어요');
+
+      // 폼 초기화
+      titleInput.value = '';
+      timeInput.value = '';
+      catInput.value = '';
+      descInput.value = '';
+      mapUrlInput.value = '';
+      latInput.value = '';
+      lngInput.value = '';
+      delete titleInput.dataset.autoFilled;
+      const feedback = document.getElementById('urlParseFeedback');
+      if (feedback) feedback.style.display = 'none';
+
+      toggleAddForm('itinerary');
+
+      if (currentDay === selectedAddDay) {
+        renderDayList(currentDay);
+      } else {
+        selectTopTab(selectedAddDay);
+      }
+    }
+
+    function deleteItineraryItem(itemId, e) {
+      if (e) e.stopPropagation();
+      if (!confirm('이 일정을 삭제하고 동행자들에게도 반영할까요?')) return;
+
+      sharedData.deleted_ids.push(itemId);
+      sharedData.itinerary_custom = sharedData.itinerary_custom.filter(item => item.id !== itemId);
+      saveCloudData('일정을 삭제하고 반영했어요');
+      renderDayList(currentDay);
+    }
+
+    function submitNewShopping() {
+      const mallSelect = document.getElementById('inputShoppingMall');
+      const nameInput = document.getElementById('inputShoppingName');
+      const floorInput = document.getElementById('inputShoppingFloor');
+      const detailInput = document.getElementById('inputShoppingDetail');
+      const mapUrlInput = document.getElementById('inputShoppingMapUrl');
+
+      const name = (nameInput.value || '').trim();
+      if (!name) {
+        alert('매장명 또는 상품명을 입력해 주세요.');
+        nameInput.focus();
+        return;
+      }
+
+      const newItem = {
+        id: 'cust-s-' + Date.now(),
+        mall: mallSelect.value || '기타',
+        floor: (floorInput.value || '위시').trim(),
+        name: name,
+        detail: (detailInput.value || '').trim(),
+        query: (mapUrlInput.value || '').trim(),
+        isCustom: true,
+        createdAt: Date.now()
+      };
+
+      sharedData.shopping_custom.push(newItem);
+      saveCloudData('쇼핑 아이템을 추가하고 공유했어요');
+
+      nameInput.value = '';
+      floorInput.value = '';
+      detailInput.value = '';
+      mapUrlInput.value = '';
+      toggleAddForm('shopping');
+      renderCustomShoppingList();
+    }
+
+    function deleteShoppingItem(itemId, e) {
+      if (e) e.stopPropagation();
+      if (!confirm('이 쇼핑 아이템을 삭제할까요?')) return;
+
+      sharedData.shopping_custom = sharedData.shopping_custom.filter(item => item.id !== itemId);
+      saveCloudData('쇼핑 아이템을 삭제했어요');
+      renderCustomShoppingList();
+    }
+
+    function renderCustomShoppingList() {
+      const container = document.getElementById('customShoppingContainer');
+      const countEl = document.getElementById('customShoppingCount');
+      if (!container) return;
+
+      const items = sharedData.shopping_custom || [];
+      if (countEl) countEl.textContent = items.length;
+
+      if (items.length === 0) {
+        container.innerHTML = '<div class="custom-shop-empty-msg">아직 추가된 쇼핑 아이템이 없어요.<br>아래 버튼을 눌러 함께 살 물건이나 매장을 추가해보세요!</div>';
+        return;
+      }
+
+      let html = '<div class="mall-floor-rows" style="margin-top: 10px;">';
+      items.forEach(item => {
+        const safeName = escapeHtml(item.name);
+        const safeMall = escapeHtml(item.mall);
+        const safeFloor = escapeHtml(item.floor || '위시');
+        const safeDetail = escapeHtml(item.detail || '');
+        const mapUrl = item.query ? (item.query.startsWith('http') ? item.query : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.query)}`) : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(item.name + ' 후쿠오카')}`;
+
+        html += `
+          <div class="mall-floor-row" style="align-items: center;">
+            <div class="floor-num-badge" style="background:#E8F3FF; color:#1B64DA; border-color:#CCE0FF;">${safeFloor}</div>
+            <div class="floor-store-content">
+              <div class="floor-store-entry">
+                <div class="floor-store-name" style="justify-content: space-between;">
+                  <div style="display: flex; align-items: center; gap: 6px; min-width: 0;">
+                    <span style="font-weight: 800;">${safeName}</span>
+                    <span class="bldg-label" style="background:#F2F4F6;">${safeMall}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; flex-shrink: 0;">
+                    <a class="store-map-link" href="${mapUrl}" target="_blank" rel="noopener" title="구글 지도 열기" onclick="event.stopPropagation()">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                      </svg>
+                    </a>
+                    <button class="btn-item-delete" onclick="deleteShoppingItem('${item.id}', event)" title="삭제">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                ${safeDetail ? `<div class="floor-store-detail">${safeDetail}</div>` : ''}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
       loadSavedItinerary();
+      loadSharedData();
       initMap();
       const initialDay = getInitialDay();
       selectTopTab(initialDay);
       syncShoppingAccordionByDay(initialDay);
+      renderCustomShoppingList();
       initSwipeGesture();
+
+      // 주기적 백그라운드 동기화 (25초 간격) 및 탭 포커스 시 즉시 동기화
+      setInterval(() => fetchCloudData(false), 25000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') fetchCloudData(false);
+      });
+      window.addEventListener('focus', () => fetchCloudData(false));
     });
   </script>
 </body>
