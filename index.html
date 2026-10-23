@@ -2210,24 +2210,44 @@
           query: 'The Royal Park Canvas Fukuoka Nakasu'
         },
         {
-          id: 'd3-2',
-          timeBlock: '오전 쇼핑',
-          category: '기념품',
-          title: '돈키호테 나카스점',
-          desc: '숙소 바로 앞 돈키호테 및 나카스카와바타 상점가 쇼핑 후 호텔에 맡긴 캐리어에 짐 정리.',
-          lat: 33.5931,
-          lng: 130.4055,
-          query: 'Don Quijote Nakasu'
+          id: 'd3-lunch',
+          timeBlock: '점심 식사',
+          category: '식사·맛집',
+          title: '하카타역 주변에서 점심',
+          desc: '하카타역 아뮤플라자 9~10층 쿠텐 식당가 또는 하카타 1번가, 데이토스 라멘 스트리트 등 하카타역 인근 식사.',
+          lat: 33.5897,
+          lng: 130.4207,
+          query: 'Hakata Station Fukuoka'
         },
         {
-          id: 'd3-3',
-          timeBlock: '마지막 점심',
-          category: '카페·식사',
-          title: '텐진 점심 & 카페',
-          desc: '출국 전 마지막 후쿠오카 로컬 식사 및 디저트 카페 여유.',
-          lat: 33.5902,
-          lng: 130.3990,
-          query: 'Tenjin Fukuoka'
+          id: 'd3-ishii',
+          timeBlock: '아웃도어 쇼핑',
+          category: '쇼핑',
+          title: '이시이 스포츠',
+          desc: '요도바시 카메라 하카타 3층. 신발·옷 둘러보고 쇼핑 (살로몬, 노스페이스, 몽벨, 아크테릭스, 아웃도어 의류 및 러닝화 쇼핑).',
+          lat: 33.5886,
+          lng: 130.4205,
+          query: 'Ishii Sports Yodobashi Hakata'
+        },
+        {
+          id: 'd3-lopia',
+          timeBlock: '대형 마트',
+          category: '마트 장보기',
+          title: '로피아 장보기',
+          desc: '요도바시 카메라 하카타 4층. 일본 초대형 마트. 신선식품, 초밥, 과자, 소스, 위스키 등 장보기 (현금 결제).',
+          lat: 33.5886,
+          lng: 130.4205,
+          query: 'Lopia Hakata'
+        },
+        {
+          id: 'd3-2',
+          timeBlock: '짐 정리',
+          category: '기념품',
+          title: '숙소 짐 찾기 & 나카스',
+          desc: '숙소에서 보관한 캐리어 찾고 쇼핑한 짐 패킹 정리.',
+          lat: 33.5936,
+          lng: 130.4046,
+          query: 'The Royal Park Canvas Fukuoka Nakasu'
         },
         {
           id: 'd3-4',
@@ -2252,7 +2272,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=9').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=10').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
@@ -2626,7 +2646,7 @@
        드래그 앤 드롭 (Sortable) 순서 관리
     ========================================================= */
     let sortableInstance = null;
-    const STORAGE_KEY = 'fukuoka_itinerary_order_v2';
+    const STORAGE_KEY = 'fukuoka_itinerary_order_v3';
 
     function initSortable() {
       const container = document.getElementById('blocksContainer');
