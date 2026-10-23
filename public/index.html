@@ -7,6 +7,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="후쿠오카" />
   <meta name="theme-color" content="#F7F8FA" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <link rel="apple-touch-icon" href="./icon-180.png" />
   <link rel="manifest" href="./manifest.json" />
   <title>후쿠오카 2박 3일 · 롸·통·빛</title>
@@ -2476,7 +2479,18 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js').catch(() => {});
+        navigator.serviceWorker.register('./sw.js?v=4').then((reg) => {
+          reg.update();
+        }).catch(() => {});
+      });
+
+      // 새로운 서비스워커 버전 감지 시 자동 리로드 (최신 배포 즉시 반영)
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          window.location.reload();
+        }
       });
     }
 

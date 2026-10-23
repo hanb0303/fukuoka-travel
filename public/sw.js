@@ -1,6 +1,5 @@
-const CACHE_NAME = 'fukuoka-v2';
+const CACHE_NAME = 'fukuoka-v4';
 const ASSETS = [
-  './fukuoka.html',
   './manifest.json',
   './sortable.min.js',
   './icon-180.png',
@@ -9,10 +8,10 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
+  self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
@@ -21,13 +20,36 @@ self.addEventListener('activate', (e) => {
       return Promise.all(
         keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
+// HTML 문서는 Network-First (항상 최신 버전 가져오고 오프라인일 때만 캐시 사용)
 self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((res) => res || fetch(e.request))
-  );
+  const req = e.request;
+  const isHtml = req.mode === 'navigate' || (req.headers.get('accept') && req.headers.get('accept').includes('text/html'));
+
+  if (isHtml) {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
+  } else {
+    e.respondWith(
+      caches.match(req).then((cached) => {
+        return cached || fetch(req).then((res) => {
+          if (res.status === 200 && req.url.startsWith('http')) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return res;
+        });
+      })
+    );
+  }
 });
