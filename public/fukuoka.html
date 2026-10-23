@@ -154,8 +154,10 @@
       height: 38px;
       border-radius: 10px;
       font-family: inherit;
-      font-size: 14.5px;
+      font-size: 14px;
       font-weight: 700;
+      white-space: nowrap;
+      touch-action: manipulation;
       color: var(--text-secondary);
       cursor: pointer;
       display: flex;
@@ -1527,9 +1529,9 @@
     ========================================================= -->
     <section class="view-container" id="viewInfo">
       <div class="info-chip-group">
-        <button class="chip-btn active" id="subBtnShopping" onclick="switchInfoPane('shopping')">쇼핑 리스트</button>
-        <button class="chip-btn" id="subBtnFlight" onclick="switchInfoPane('flight')">항공권</button>
-        <button class="chip-btn" id="subBtnReservation" onclick="switchInfoPane('reservation')">예약</button>
+        <button class="chip-btn active" id="subBtnShopping" onclick="switchInfoPane('shopping')">🛍️ 쇼핑 리스트</button>
+        <button class="chip-btn" id="subBtnFlight" onclick="switchInfoPane('flight')">✈️ 항공권</button>
+        <button class="chip-btn" id="subBtnReservation" onclick="switchInfoPane('reservation')">숙소 · 식당 예약</button>
       </div>
 
       <!-- 1. 항공권 패널 -->
@@ -1663,6 +1665,26 @@
       <!-- 3. 쇼핑 리스트 패널 (접이식 아코디언 UI) -->
       <div class="info-content-panel active" id="paneShopping">
         <div class="mall-accordion-list">
+          <!-- 6) 동행자 직접 추가 쇼핑 위시리스트 -->
+          <div class="mall-acc-item active" id="accCustomShopping" style="border-color: rgba(49, 130, 246, 0.45);">
+            <div class="mall-acc-header" onclick="toggleMallAccordion('accCustomShopping')">
+              <div class="mall-acc-title-wrap">
+                <span class="mall-acc-day-tag" style="background:#E8F3FF; color:#1B64DA;">롸·통·빛 실시간 공유 리스트</span>
+                <div class="mall-acc-name">직접 추가한 쇼핑 위시리스트 (<span id="customShoppingCount">0</span>)</div>
+              </div>
+              <div class="mall-acc-actions">
+                <div class="mall-acc-chevron">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6 9 12 15 18 9"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div class="mall-acc-body" id="customShoppingContainer">
+              <div class="custom-shop-empty-msg">아직 추가된 쇼핑 아이템이 없어요.<br>아래 한 줄 입력창에 사고 싶은 물건이나 매장을 적어 담아보세요!</div>
+            </div>
+          </div>
+
 
           <!-- 1) 캐널시티 & 알펜 후쿠오카 -->
           <div class="mall-acc-item active" id="accCanal">
@@ -2005,25 +2027,7 @@
           </div>
 
         
-          <!-- 6) 동행자 직접 추가 쇼핑 위시리스트 -->
-          <div class="mall-acc-item active" id="accCustomShopping" style="border-color: rgba(49, 130, 246, 0.45);">
-            <div class="mall-acc-header" onclick="toggleMallAccordion('accCustomShopping')">
-              <div class="mall-acc-title-wrap">
-                <span class="mall-acc-day-tag" style="background:#E8F3FF; color:#1B64DA;">롸·통·빛 실시간 공유 리스트</span>
-                <div class="mall-acc-name">직접 추가한 쇼핑 위시리스트 (<span id="customShoppingCount">0</span>)</div>
-              </div>
-              <div class="mall-acc-actions">
-                <div class="mall-acc-chevron">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="6 9 12 15 18 9"/>
-                  </svg>
-                </div>
-              </div>
-            </div>
-            <div class="mall-acc-body" id="customShoppingContainer">
-              <div class="custom-shop-empty-msg">아직 추가된 쇼핑 아이템이 없어요.<br>아래 버튼을 눌러 함께 살 물건이나 매장을 추가해보세요!</div>
-            </div>
-          </div>
+          
         </div>
 
         <!-- 쇼핑 원라인 퀵 추가 바 -->
@@ -2271,7 +2275,7 @@
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js?v=4').then((reg) => {
+        navigator.serviceWorker.register('./sw.js?v=6').then((reg) => {
           reg.update();
         }).catch(() => {});
       });
@@ -2320,7 +2324,10 @@
       if (viewInfo) viewInfo.classList.toggle('active', isInfo);
 
       if (isInfo) {
-        switchInfoPane('shopping');
+        const activeSub = document.querySelector('.info-content-panel.active');
+        if (!activeSub) {
+          switchInfoPane('shopping');
+        }
         syncShoppingAccordionByDay(currentDay);
       }
 
@@ -2766,7 +2773,11 @@
       const targetAccId = dayMallMap[dayNum] || 'accCanal';
 
       document.querySelectorAll('.mall-acc-item').forEach(item => {
-        item.classList.toggle('active', item.id === targetAccId);
+        if (item.id === 'accCustomShopping') {
+          item.classList.add('active'); // 실시간 공유 리스트는 상시 오픈
+        } else {
+          item.classList.toggle('active', item.id === targetAccId);
+        }
       });
     }
 
@@ -2814,18 +2825,13 @@
         if (e.touches.length !== 1) return;
         const target = e.target;
 
-        // 인터랙션 충돌 방지: 지도 드래그, 순서 변경 핸들, 서브 탭 칩 스크롤, 버튼 등 제외
+        // 지도 조작, 순서 변경 핸들, 입력창, 버튼/링크는 스와이프 충돌 방지
         if (target.closest('#routeMap') ||
             target.closest('.item-drag-handle') ||
-            target.closest('.info-chip-group') ||
-            target.closest('.item-route-icon-btn') ||
-            target.closest('.btn-native-action') ||
-            target.closest('.btn-mini-copy') ||
-            target.closest('.store-map-link') ||
-            target.closest('.quick-add-bar') ||
-            target.closest('.btn-item-delete') ||
-            target.closest('.sync-status-badge') ||
-            target.closest('.mall-acc-header')) {
+            target.closest('input') ||
+            target.closest('textarea') ||
+            target.closest('button') ||
+            target.closest('a')) {
           isTracking = false;
           return;
         }
@@ -2834,6 +2840,10 @@
         touchStartY = e.touches[0].clientY;
         touchStartTime = Date.now();
         isTracking = true;
+      }, { passive: true });
+
+      document.addEventListener('touchcancel', () => {
+        isTracking = false;
       }, { passive: true });
 
       document.addEventListener('touchend', (e) => {
@@ -2846,18 +2856,18 @@
         const diffY = touchEndY - touchStartY;
         const elapsed = Date.now() - touchStartTime;
 
-        // 세로 스크롤과 명확히 구분: 600ms 이내 빠른 플릭, 가로 이동 45px 이상, 가로 각도가 세로의 1.4배 이상
-        if (elapsed < 600 && Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY) * 1.4) {
+        // 가로 스와이프 판별: 650ms 이내, 38px 이상 이동, 가로 이동이 세로보다 1.1배 이상
+        if (elapsed < 650 && Math.abs(diffX) > 38 && Math.abs(diffX) > Math.abs(diffY) * 1.1) {
           const currentIndex = tabs.indexOf(currentTopTab);
           if (currentIndex === -1) return;
 
           if (diffX < 0) {
-            // 왼쪽으로 스와이프 -> 다음 탭 (Day 1 -> Day 2 -> Day 3 -> 쇼핑·예약)
+            // 왼쪽 스와이프 -> 다음 탭 (Day 1 -> Day 2 -> Day 3 -> 쇼핑·예약)
             if (currentIndex < tabs.length - 1) {
               selectTopTab(tabs[currentIndex + 1]);
             }
           } else {
-            // 오른쪽으로 스와이프 -> 이전 탭 (쇼핑·예약 -> Day 3 -> Day 2 -> Day 1)
+            // 오른쪽 스와이프 -> 이전 탭 (쇼핑·예약 -> Day 3 -> Day 2 -> Day 1)
             if (currentIndex > 0) {
               selectTopTab(tabs[currentIndex - 1]);
             }
@@ -2866,10 +2876,6 @@
       }, { passive: true });
     }
 
-    
-    /* =========================================================
-       클라우드 실시간 동기화 (롸·통·빛 자동 공유)
-    ========================================================= */
     const SHARED_CLOUD_ENDPOINT = 'https://api.restful-api.dev/objects/ff808181a09d98f701a16672b1506195';
     const SHARED_STORAGE_KEY = 'fukuoka_shared_data_v2';
 
@@ -3115,6 +3121,11 @@
 
       input.value = '';
       renderCustomShoppingList();
+      const customAcc = document.getElementById('accCustomShopping');
+      if (customAcc) {
+        customAcc.classList.add('active');
+        customAcc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
 
     function deleteShoppingItem(itemId, e) {
